@@ -1,0 +1,5 @@
+import common
+
+module room_match{
+    room_join_match ntf(room_info info);
+}

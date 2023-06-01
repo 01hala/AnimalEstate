@@ -1,0 +1,134 @@
+{
+  "ver": "1.0.25",
+  "importer": "image",
+  "imported": true,
+  "uuid": "f8be9c5a-c915-48e0-8011-a272158e1385",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "f8be9c5a-c915-48e0-8011-a272158e1385@6c48a",
+      "displayName": "10亢奋花瓣",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "f8be9c5a-c915-48e0-8011-a272158e1385",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "f8be9c5a-c915-48e0-8011-a272158e1385@f9941",
+      "displayName": "10亢奋花瓣",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": -1,
+        "offsetY": -450,
+        "trimX": 271,
+        "trimY": 1330,
+        "width": 609,
+        "height": 287,
+        "rawWidth": 1153,
+        "rawHeight": 2047,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -304.5,
+            -143.5,
+            0,
+            304.5,
+            -143.5,
+            0,
+            -304.5,
+            143.5,
+            0,
+            304.5,
+            143.5,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            271,
+            717,
+            880,
+            717,
+            271,
+            430,
+            880,
+            430
+          ],
+          "nuv": [
+            0.23503902862098872,
+            0.21006350757205666,
+            0.7632263660017347,
+            0.21006350757205666,
+            0.23503902862098872,
+            0.35026868588177823,
+            0.7632263660017347,
+            0.35026868588177823
+          ],
+          "minPos": [
+            -304.5,
+            -143.5,
+            0
+          ],
+          "maxPos": [
+            304.5,
+            143.5,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "f8be9c5a-c915-48e0-8011-a272158e1385@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "fixAlphaTransparencyArtifacts": true,
+    "hasAlpha": true,
+    "redirect": "f8be9c5a-c915-48e0-8011-a272158e1385@f9941"
+  }
+}

@@ -1,0 +1,5 @@
+import common
+
+module player_match{
+    player_join_match ntf(playground _playground, player_inline_info player_info);
+}

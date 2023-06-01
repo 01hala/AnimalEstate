@@ -1,0 +1,134 @@
+{
+  "ver": "1.0.25",
+  "importer": "image",
+  "imported": true,
+  "uuid": "03741e2f-7437-4570-a4ec-442728a4fc61",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "03741e2f-7437-4570-a4ec-442728a4fc61@6c48a",
+      "displayName": "中地图",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "03741e2f-7437-4570-a4ec-442728a4fc61",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "03741e2f-7437-4570-a4ec-442728a4fc61@f9941",
+      "displayName": "中地图",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 2,
+        "trimY": 2,
+        "width": 377,
+        "height": 250,
+        "rawWidth": 381,
+        "rawHeight": 254,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -188.5,
+            -125,
+            0,
+            188.5,
+            -125,
+            0,
+            -188.5,
+            125,
+            0,
+            188.5,
+            125,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            2,
+            252,
+            379,
+            252,
+            2,
+            2,
+            379,
+            2
+          ],
+          "nuv": [
+            0.005249343832020997,
+            0.007874015748031496,
+            0.994750656167979,
+            0.007874015748031496,
+            0.005249343832020997,
+            0.9921259842519685,
+            0.994750656167979,
+            0.9921259842519685
+          ],
+          "minPos": [
+            -188.5,
+            -125,
+            0
+          ],
+          "maxPos": [
+            188.5,
+            125,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "03741e2f-7437-4570-a4ec-442728a4fc61@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "fixAlphaTransparencyArtifacts": true,
+    "hasAlpha": true,
+    "redirect": "03741e2f-7437-4570-a4ec-442728a4fc61@f9941"
+  }
+}

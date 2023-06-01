@@ -1,0 +1,130 @@
+[
+  {
+    "__type__": "cc.AnimationClip",
+    "_name": "light_grid",
+    "_objFlags": 0,
+    "__editorExtras__": {
+      "embeddedPlayerGroups": [
+        {
+          "key": "1683377296293",
+          "name": "animation-clip",
+          "type": "animation-clip"
+        },
+        {
+          "key": "1683377299563",
+          "name": "particle-system",
+          "type": "particle-system"
+        }
+      ]
+    },
+    "_native": "",
+    "sample": 100,
+    "speed": 1,
+    "wrapMode": 1,
+    "enableTrsBlending": false,
+    "_duration": 0.22,
+    "_hash": 500763545,
+    "_tracks": [
+      {
+        "__id__": 1
+      }
+    ],
+    "_exoticAnimation": null,
+    "_events": [],
+    "_embeddedPlayers": [
+      {
+        "__id__": 6
+      },
+      {
+        "__id__": 8
+      }
+    ]
+  },
+  {
+    "__type__": "cc.animation.ObjectTrack",
+    "_binding": {
+      "__type__": "cc.animation.TrackBinding",
+      "path": {
+        "__id__": 2
+      },
+      "proxy": null
+    },
+    "_channel": {
+      "__id__": 4
+    }
+  },
+  {
+    "__type__": "cc.animation.TrackPath",
+    "_paths": [
+      {
+        "__id__": 3
+      },
+      "spriteFrame"
+    ]
+  },
+  {
+    "__type__": "cc.animation.ComponentPath",
+    "component": "cc.Sprite"
+  },
+  {
+    "__type__": "cc.animation.Channel",
+    "_curve": {
+      "__id__": 5
+    }
+  },
+  {
+    "__type__": "cc.ObjectCurve",
+    "_times": [
+      0,
+      0.1,
+      0.21
+    ],
+    "_values": [
+      {
+        "__uuid__": "8f432eab-0724-4c43-92a9-83779fac1f5e@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "fbed6323-dbec-428f-a615-281b17b5c37c@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "1467f4c9-a0f6-4e11-8097-478938c127a1@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      }
+    ]
+  },
+  {
+    "__type__": "cc.animation.EmbeddedPlayer",
+    "__editorExtras__": {
+      "group": "1683377296293"
+    },
+    "begin": 0,
+    "end": 0.08333333333333333,
+    "reconciledSpeed": false,
+    "playable": {
+      "__id__": 7
+    }
+  },
+  {
+    "__type__": "cc.animation.EmbeddedAnimationClipPlayable",
+    "path": "",
+    "clip": null
+  },
+  {
+    "__type__": "cc.animation.EmbeddedPlayer",
+    "__editorExtras__": {
+      "group": "1683377299563"
+    },
+    "begin": 0,
+    "end": 0.08333333333333333,
+    "reconciledSpeed": false,
+    "playable": {
+      "__id__": 9
+    }
+  },
+  {
+    "__type__": "cc.animation.EmbeddedParticleSystemPlayable",
+    "path": ""
+  }
+]

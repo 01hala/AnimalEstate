@@ -1,0 +1,134 @@
+{
+  "ver": "1.0.25",
+  "importer": "image",
+  "imported": true,
+  "uuid": "2b389bde-1108-49e2-ba88-fed82e2a1406",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "2b389bde-1108-49e2-ba88-fed82e2a1406@6c48a",
+      "displayName": "19步步生莲介绍",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "2b389bde-1108-49e2-ba88-fed82e2a1406",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "2b389bde-1108-49e2-ba88-fed82e2a1406@f9941",
+      "displayName": "19步步生莲介绍",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": -9.5,
+        "offsetY": 17,
+        "trimX": 60,
+        "trimY": 59,
+        "width": 732,
+        "height": 324,
+        "rawWidth": 871,
+        "rawHeight": 476,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -366,
+            -162,
+            0,
+            366,
+            -162,
+            0,
+            -366,
+            162,
+            0,
+            366,
+            162,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            60,
+            417,
+            792,
+            417,
+            60,
+            93,
+            792,
+            93
+          ],
+          "nuv": [
+            0.06888633754305395,
+            0.1953781512605042,
+            0.9092996555683123,
+            0.1953781512605042,
+            0.06888633754305395,
+            0.8760504201680672,
+            0.9092996555683123,
+            0.8760504201680672
+          ],
+          "minPos": [
+            -366,
+            -162,
+            0
+          ],
+          "maxPos": [
+            366,
+            162,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "2b389bde-1108-49e2-ba88-fed82e2a1406@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "fixAlphaTransparencyArtifacts": true,
+    "hasAlpha": true,
+    "redirect": "2b389bde-1108-49e2-ba88-fed82e2a1406@f9941"
+  }
+}

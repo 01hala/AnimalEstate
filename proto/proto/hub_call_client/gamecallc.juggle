@@ -1,0 +1,91 @@
+import common
+
+struct effect_info 
+{
+	int64 guid;
+	int16[] grids;
+	effect effect_id;
+	int32 continued_rounds;
+}
+
+struct prop_info 
+{
+	int16 grid;
+	props prop_id;
+	int32 continued_rounds;
+}
+
+enum enum_add_props_type
+{
+	pick_up = 1;		//场景随机生成 拾取
+	gacha_add = 2;		//扭蛋获得
+}
+
+module game_client{
+	
+	game_wait_start_info multicast(int32 countdown, playground _playground, player_game_info[] info, player_inline_info self_info);
+	
+	game_info multicast(playground _playground, player_game_info[] info, int64 round_player_guid);
+
+	animal_order multicast(int64 guid, animal_game_info[] animal_info, skill skill_id);
+	
+	ntf_effect_info multicast(effect_info[] info);
+	
+	ntf_new_effect_info multicast(effect_info info);
+
+	remove_effect multicast(int16 grids);
+
+	remove_muddy multicast(int16[] grids);
+
+	ntf_player_stepped_effect multicast(int64 guid, effect effect_id, int16 grid, bool is_remove);
+
+	ntf_prop_info multicast(prop_info[] info);
+	
+	ntf_new_prop_info multicast(prop_info info);
+
+	remove_prop multicast(int16 grid);
+
+	ntf_player_stepped_prop multicast(int64 guid, props prop_id);
+
+	ntf_player_prop_list ntf(props[] prop_list);
+	
+	turn_player_round multicast(int64 guid, play_active_state active_state, int16 animal_index, int32 round);
+
+	ntf_player_auto ntf();
+	
+	relay multicast(int64 guid, int16 new_animal_index, bool is_follow);
+
+	start_throw_dice multicast(int64 guid, int16 animal_index);
+	
+	throw_dice multicast(int64 guid, int32[] dice);
+	
+	choose_dice req() rsp(int16 dice_index) err();
+	
+	rabbit_choose_dice multicast(int32 dice);
+	
+	move multicast(int64 guid, int16 animal_index, float move_coefficient, int32 from, int32 to);
+	
+	animal_effect_touch_off multicast(int64 self_guid, int16 self_animal_index, int64 target_guid, int16 target_animal_index);
+	
+	ntf_animal_be_stepped multicast(int64 guid, int16 animal_index);
+
+	throw_animal req(int64 self_guid, int64 guid, int16 animal_index, int32[] target_pos) rsp(int32 target_pos) err();
+	
+	throw_animal_ntf multicast(int64 self_guid, int64 guid, int16 animal_index, int32[] target_pos);
+
+	throw_animal_move multicast(int64 guid, int16 animal_index, int32 from, int32 to);
+
+	use_skill multicast(int64 guid, int16 animal_index, int64 target_guid, int16 target_animal_index);
+	
+	effect_move multicast(effect effect_id, int64 guid, int16 target_animal_index, int32 from, int32 to);
+	
+	use_props multicast(props props_id, int64 guid, int16 animal_index, int64 target_guid, int16 target_animal_index);
+	
+	add_props multicast(enum_add_props_type add_type, int64 guid, props props_id);
+	
+	reverse_props multicast(int64 src_guid, int64 target_guid, int16 target_animal_index, props props_id, int64 reverse_target_guid, int16 reverse_target_animal_index);
+	
+	immunity_props multicast(int64 guid, props props_id, int64 target_guid, int16 target_animal_index);
+	
+	can_not_active_this_round multicast(int64 guid);
+}

@@ -1,0 +1,4 @@
+module login{
+    player_login_no_author req(string account) rsp(string player_hub_name, string token) err(int32 err);
+    player_login_wx req(string code) rsp(string player_hub_name, string token) err(int32 err);
+}

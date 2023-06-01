@@ -1,0 +1,209 @@
+enum animal
+{
+	chicken = 1;
+	monkey = 2;
+	rabbit = 3;
+	duck = 4;
+	mouse = 5;
+	bear = 6;
+	tiger = 7;
+	lion = 8;
+}
+
+enum skin
+{
+	// 鸡类皮肤 从101开始计数
+	chicken = 101;
+	
+	// 猴类皮肤 从201开始计数
+	monkey = 201;
+	
+	// 兔类皮肤 从301开始计数
+	rabbit = 301;
+	
+	// 鸭类皮肤 从401开始计数
+	duck = 401;
+	
+	// 鼠类皮肤 从501开始计数
+	mouse = 501;
+	
+	// 熊类皮肤 从601开始计数
+	bear = 601;
+	
+	// 虎类皮肤 从701开始计数
+	tiger = 701;
+	
+	// 狮类皮肤 从801开始计数
+	lion = 801;
+}
+
+enum effect 
+{
+	// 场景随机事件 1-100
+	muddy = 1;
+	golden_apple = 2;
+	rice_ear = 3;
+	monkey_wine = 4;
+	
+	// 玩家道具/技能产生
+	thunder = 101;
+	clip = 102;
+	landmine = 103;
+	spring = 104;
+	banana = 105;
+	watermelon_rind = 106;
+	red_mushroom = 107;
+}
+
+enum skill
+{
+	phantom_dice = 1; 		//幻影骰子
+	soul_moving_method = 2; //移魂大法
+	thief_reborn = 3;		//神偷再世
+	step_lotus = 4;			//步步生莲
+	preemptiv_strike = 5;	//先发制人
+	swap_places = 6;		//移形换影
+	altec_lightwave = 7;	//奥特光波
+}
+
+enum props
+{
+    none = 0;
+	horn = 1;				//号角
+	bomb = 2;				//炸弹
+	help_vellus = 3;		//救命毫毛
+	thunder = 4;			//天雷
+	clown_gift_box = 5;		//小丑礼盒
+	excited_petals = 6;		//亢奋花瓣
+	clip = 7;				//夹子
+	landmine = 8;			//地雷
+	spring = 9;				//弹簧
+	turtle_shell = 10;		//无敌龟壳
+	banana = 11;			//香蕉
+	watermelon_rind = 12;	//西瓜皮
+	red_mushroom = 13;		//红蘑菇
+	gacha = 14;				//扭蛋
+	fake_dice = 15;			//假骰子
+}
+
+enum playground
+{
+	random = 0;    // 随机地图
+	lakeside = 1;  // 平原湖边
+	grassland = 2; // 草原
+	hill = 3;      // 山丘
+	snow = 4;	   // 雪地
+	desert = 5;	   // 沙漠
+	countof = 6;   // 总数
+}
+
+struct player_friend_info
+{
+	int64 guid;
+	string sdk_uuid;
+	string name;
+	string avatar;
+	int32 coin;
+	int32 score;
+}
+
+struct player_info
+{
+	int64 guid;
+	string sdk_uuid;
+	string name;
+	string avatar;
+	int32 coin;
+	int32 score;
+	player_friend_info[] friend_list;
+    player_friend_info[] invite_list;
+    player_friend_info[] be_invited_list;
+	animal[] hero_list;
+	skin[] skin_list;
+	skill[] skill_list;
+	playground[] playground_list;
+}
+
+struct player_inline_info
+{
+	string uuid;
+	int64 guid;
+	string name;
+	string avatar;
+	int32 coin;
+	int32 score;
+	animal[] hero_list;
+	skin[] skin_list;
+	skill[] skill_list;
+	playground[] playground_list;
+}
+
+struct room_info
+{
+	string room_uuid;
+	int64 room_owner_guid;
+	playground _playground;
+	player_inline_info[] room_player_list;
+}
+
+struct animal_game_info
+{
+	animal animal_id;
+	skin skin_id;
+	int16 current_pos;
+	bool could_move = true;
+	int32 unmovable_rounds = 0;
+	int32 continuous_move_rounds = 0;
+}
+
+struct animal_play_active_state {
+	int16 animal_index;
+	bool could_use_props;
+	int16 use_props_count;
+	bool could_throw_dice;
+	bool is_step_lotus;
+	int16 throw_dice_count;
+	float move_coefficient;
+}
+
+struct play_active_state {
+	bool could_use_skill;
+	bool phantom_dice;
+	bool fake_dice;
+	float move_coefficient;
+	bool preemptive_strike;
+	int16 round_active_num;
+	animal_play_active_state[] animal_play_active_states;
+}
+
+struct player_game_info
+{
+	string uuid;
+	int64 guid;
+	string name;
+	string avatar;
+	skill skill_id;
+	bool skill_is_used;
+	animal_game_info[] animal_info;
+	int16 current_animal_index;
+}
+
+struct game_player_settle_info
+{
+	int64 guid;
+	string name;
+	int32 rank;
+	int32 award_coin;
+	int32 award_score;
+}
+
+struct game_settle_info
+{
+	game_player_settle_info[] settle_info;
+}
+
+struct svr_info
+{
+	int32 tick_time;
+	int32 player_num;
+}
