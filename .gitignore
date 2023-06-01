@@ -357,3 +357,4 @@ obj/
 *.exp
 /redis/dump.rdb
 cert/
+config_node.txt
