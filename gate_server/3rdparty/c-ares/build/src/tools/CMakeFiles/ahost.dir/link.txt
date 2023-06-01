@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/ahost.dir/ahost.c.o CMakeFiles/ahost.dir/ares_getopt.c.o CMakeFiles/ahost.dir/__/lib/ares_nowarn.c.o CMakeFiles/ahost.dir/__/lib/ares_strcasecmp.c.o -o ../../bin/ahost  -Wl,-rpath,/mnt/AnimalEstate/gate_server/3rdparty/c-ares/build/lib: ../../lib/libcares.so.2.5.1 
