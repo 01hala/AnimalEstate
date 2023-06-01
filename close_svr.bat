@@ -1,0 +1,1 @@
+start ./bin/debug/control.exe ./config/config_node.txt gm qianqians close
