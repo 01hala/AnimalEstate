@@ -56,6 +56,23 @@ export class netGame {
         this.game_call_client_module.cb_can_not_active_this_round = this.on_cb_can_not_active_this_round.bind(this);
     }
 
+    public ReInit() {
+        this.cb_animal_order = [];
+        this.cb_turn_player_round = [];
+
+        this.game_hub_name = "";
+        this.isInitGameInfo = false;
+        this.Countdown = 0;
+        this.Playground = common.playground.random;
+        this.CurrentPlayerInfo = null;
+        this.PlayerGameInfo = [];
+        this.SelfPlayerInlineInfo = null;
+        this.effect_info_list = [];
+        this.SelfPropList = [];
+        this.current_guid = -4;
+        this.is_auto = false;
+    }
+
     public into_game(game_hub_name : string) {
         this.game_hub_name = game_hub_name;
         this.game_caller.get_hub(this.game_hub_name).into_game(this.login_handle.player_info.guid);
@@ -91,6 +108,10 @@ export class netGame {
 
     public cancel_auto() {
         this.game_caller.get_hub(this.game_hub_name).cancel_auto();
+    }
+
+    public cancel_game() {
+        return this.game_caller.get_hub(this.game_hub_name).cancel_game();
     }
 
     public get_playground_len(){

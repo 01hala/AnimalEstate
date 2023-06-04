@@ -193,6 +193,12 @@ export class main_game_effect_props extends Component {
     start() {
         this.init_props_prefab();
 
+        this.is_props = false;
+        this.use_prop_id = props.none;
+        this.target_guid = 0;
+        this.target_animal_index = 0;
+        this.propsList = [];
+
         singleton.netSingleton.game.cb_ntf_prop_info = this.on_cb_ntf_prop_info.bind(this);
         singleton.netSingleton.game.cb_ntf_new_prop_info = this.on_cb_ntf_new_prop_info.bind(this);
         singleton.netSingleton.game.cb_remove_prop = this.on_cb_remove_prop.bind(this);

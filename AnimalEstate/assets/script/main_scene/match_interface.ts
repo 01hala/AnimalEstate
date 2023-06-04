@@ -59,6 +59,8 @@ export class match_interface extends Component {
 
             this.unschedule(this.countdown_callback);
             this.node.active = false;
+
+            singleton.netSingleton.room.ReInit();
             
             singleton.netSingleton.bundle.loadScene('lakeside_game', function (err, scene) {
                 director.runScene(scene);

@@ -269,7 +269,7 @@ namespace game
             return true;
         }
 
-        private async Task del_player_game_cache(client_proxy _client_Proxy)
+        public async Task del_player_game_cache(client_proxy _client_Proxy)
         {
             var token = $"lock_{_client_Proxy.PlayerGameInfo.guid}";
             var lock_key = redis_help.BuildPlayerGameCacheLockKey(_client_Proxy.PlayerGameInfo.guid);

@@ -267,6 +267,9 @@ export class main_game_ready extends Component {
     }
 
     start() {
+        this.selectAnimalMap = new Map<animal, Node>();
+        this.selectSkillMap = new Map<skill, Node>();
+
         this.init_btn_event(Node.EventType.TOUCH_START);
         this.init_select();
     }

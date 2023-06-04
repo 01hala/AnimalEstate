@@ -7,6 +7,8 @@ import { playground, play_active_state, animal_game_info, animal, effect, player
 import * as singleton from '../netDriver/netSingleton';
 
 import * as game_data_def from './global_game_data/game_data_def';
+import * as game_data_effect from './global_game_data/game_effect_def';
+import * as game_data_props from './global_game_data/game_props_def';
 
 @ccclass('main_game_dice')
 export class main_game_dice extends Component {
@@ -54,6 +56,8 @@ export class main_game_dice extends Component {
     diceBG:Sprite = null;
     @property(Sprite)
     diceTriggerBG:Sprite = null;
+    @property(Sprite)
+    cancel:Sprite = null;
     
     @property(Sprite)
     dice_instance:Sprite = null;
@@ -138,6 +142,7 @@ export class main_game_dice extends Component {
         this.role3.node.on(ev_type, this.choose_role3, this);
 
         this.cancel_auto.node.on(ev_type, this.on_cancel_auto, this);
+        this.cancel.node.on(ev_type, this.on_cancel_game, this);
     }
 
     private init_global_res() {
@@ -160,7 +165,6 @@ export class main_game_dice extends Component {
         singleton.netSingleton.game.cb_ntf_player_auto = this.on_cb_ntf_player_auto.bind(this);
         singleton.netSingleton.game.cb_relay = this.on_cb_relay.bind(this);
         singleton.netSingleton.game.cb_move = this.on_cb_move.bind(this);
-        //singleton.netSingleton.game.cb_ntf_animal_be_stepped = this.on_cb_ntf_animal_be_stepped.bind(this);
         singleton.netSingleton.game.cb_effect_move = this.cb_effect_move.bind(this);
         singleton.netSingleton.game.cb_start_dice = this.on_cb_start_dice.bind(this);
         singleton.netSingleton.game.cb_throw_dice = this.on_cb_throw_dice.bind(this);
@@ -184,13 +188,8 @@ export class main_game_dice extends Component {
                     label.string = info.name;
 
                     this.main_canvas.node.on(Node.EventType.TOUCH_START, ()=>{
-                        console.log("cancle cb_settle!");
-                        console.log(singleton.netSingleton.mainScene);
                         settle_ui.destroy();
-                        singleton.netSingleton.game.game_hub_name = "";
-                        singleton.netSingleton.bundle.loadScene('main', function (err, scene) {
-                            director.runScene(scene);
-                        });
+                        this.cancel_game();
                     }, this);
                 }
             }
@@ -288,7 +287,23 @@ export class main_game_dice extends Component {
         this.diceTriggerBG.node.active = false;
     }
 
-    start() {
+    onLoad(){
+        this.dice_result_instance = null;
+        this.dice_1_result_instance = null;
+        this.dice_2_result_instance = null;
+        this.dice_choose_index = -1;
+
+        this.relay_animal_instance = null
+
+        this.moveList = [];
+        this.activeStateMap = new Map<number, play_active_state>();
+        this.is_auto = false;
+        this.is_start = false;
+
+        this.begin();
+    }
+
+    begin() {
         console.log("main_game_dice start begin!");
 
         this.init_net_msg();
@@ -407,6 +422,29 @@ export class main_game_dice extends Component {
         this.cancel_auto.node.active = false;
 
         singleton.netSingleton.game.cancel_auto();
+    }
+
+    private on_cancel_game() {
+        singleton.netSingleton.game.cancel_game().callBack(()=>{
+            this.cancel_game();
+        }, ()=>{
+            console.log("on_cancel_game error!");
+        });
+    }
+
+    private cancel_game() {
+        console.log("cancle cb_settle!");
+        console.log(singleton.netSingleton.mainScene);
+
+        singleton.netSingleton.game.ReInit();
+
+        game_data_def.game_data.init();
+        game_data_effect.game_data_effect.init();
+        game_data_props.game_data_props.init();
+
+        singleton.netSingleton.bundle.loadScene('main', function (err, scene) {
+            director.runScene(scene);
+        });
     }
 
     private on_cb_relay(guid:number, new_animal_index:number, is_follow:boolean) {

@@ -32,12 +32,14 @@ export class main_game_lake extends Component {
         game_data_def.game_data.layout_height = 1600;
         game_data_def.game_data.layout_half_width = 800;
         game_data_def.game_data.layout_half_height = 800;
+        game_data_def.game_data.map.enableCulling = true;
 
         for(let i = 0; i < playgroundLenght; i++) {
             let layer_name = "跑道" + i;
             let layer = game_data_def.game_data.map.getLayer(layer_name);
             let tile_pos = new Vec2(layer.rightTop.col, layer.rightTop.row);
             game_data_def.game_data.mapPlayground.set(i, tile_pos);
+            console.log("layer:", layer);
         }
 
         if (!singleton.netSingleton.game.CurrentPlayerInfo) {

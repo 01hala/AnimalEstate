@@ -22,19 +22,25 @@ namespace game
             game_Module.on_cancel_game += Game_Module_on_cancel_game;
         }
 
-        private void Game_Module_on_cancel_game()
+        private async void Game_Module_on_cancel_game()
         {
             log.log.trace($"on_cancel_game begin!");
+
+            var rsp = game_Module.rsp as game_cancel_game_rsp;
 
             var uuid = hub.hub._gates.current_client_uuid;
             var _client = game._game_mng.get_player(uuid);
             try
             {
                 _client.set_auto_active(true);
+                _client.uuid = "cancel";
+                await _client.GameImpl.del_player_game_cache(_client);
+                rsp.rsp();
             }
             catch (System.Exception ex)
             {
                 log.log.err($"{ex}");
+                rsp.err();
             }
         }
 

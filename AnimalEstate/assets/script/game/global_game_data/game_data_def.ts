@@ -88,6 +88,22 @@ export class game_data {
     public static effect_index:number = 0;
 
     public static waitDice:boolean = false;
+
+    public static init() {
+        game_data.player1_guid = 0;
+        game_data.player2_guid = 0;
+        game_data.player3_guid = 0;
+
+        game_data.mapPlayground = new Map<number, Vec2>();
+        game_data.PlayerAnimalMap = new Map<number, Map<number, Node> >();
+        game_data.PlayerAnimalAnimationMap = new Map<number, Map<number, em_animation_state> >();
+        game_data.current_move_obj = null;
+        game_data.effect_index = 0;
+
+        game_data.waitDice = false;
+        game_data.isInit = false;
+        game_data.isStart = false;
+    }
     
     public static init_select_player_ui() {
         let index = 0;

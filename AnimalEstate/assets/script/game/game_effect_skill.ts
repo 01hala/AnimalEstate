@@ -223,6 +223,13 @@ export class main_game_effect_skill extends Component {
     }
 
     start() {
+        this.round = 0;
+        this.skill_is_use = false;
+        this.is_skill = true;
+        this.target_guid = 0;
+        this.target_animal_index = 0;
+        this.skill_can_not_use_instance = null;
+
         singleton.netSingleton.game.cb_turn_player_round.push(this.on_cb_turn_player_round.bind(this));
         singleton.netSingleton.game.cb_use_skill = this.on_cb_use_skill.bind(this);
         singleton.netSingleton.game.cb_animal_order.push(this.on_cb_animal_order.bind(this));

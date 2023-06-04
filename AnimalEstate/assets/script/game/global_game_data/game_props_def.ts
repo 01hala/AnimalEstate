@@ -24,6 +24,10 @@ export class game_data_props {
     
     public static mapProps:Map<number, any> = new Map<number, any>();
 
+    public static init() {
+        game_data_props.mapProps = new Map<number, any>();
+    }
+
     public static remove_all_prop() {
         game_data_props.mapProps.forEach((prop, grid) => {
             game_data_def.game_data.map.node.removeChild(prop);

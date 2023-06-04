@@ -46,6 +46,10 @@ export class netRoom {
         this.room_match_call_client.cb_role_into_game = this.on_cb_role_into_game.bind(this);
     }
 
+    public ReInit() {
+        this.cb_refresh_room_info = [];
+    }
+
     public RoomInfo:common.room_info = null;
     public create_room_callback : (room_hub_name:string, _room_info:common.room_info) => void = null;
     public create_room(_playground : common.playground) {

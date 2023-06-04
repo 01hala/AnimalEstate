@@ -22,6 +22,13 @@ export class game_data_effect {
 
     public static mapMuddy:Map<number, any> = new Map<number, any>();
 
+    public static init() {
+        game_data_effect.mapEffect = new Map<number, any[]>();
+        game_data_effect.mapAnimationEffect = new Map<number, any[]>();
+
+        game_data_effect.mapMuddy = new Map<number, any>();
+    }
+
     public static remove_all_effect() {
         game_data_effect.mapEffect.forEach((effect, grid) => {
             for (let old_effect_instance of effect) {
