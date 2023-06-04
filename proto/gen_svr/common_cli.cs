@@ -727,6 +727,84 @@ namespace abelkhan
         }
     }
 
+    public class player_rank_info
+    {
+        public Int64 guid;
+        public string sdk_uuid;
+        public string name;
+        public string avatar;
+        public Int32 coin;
+        public Int32 score;
+        public static MsgPack.MessagePackObjectDictionary player_rank_info_to_protcol(player_rank_info _struct){
+            var _protocol = new MsgPack.MessagePackObjectDictionary();
+            _protocol.Add("guid", _struct.guid);
+            _protocol.Add("sdk_uuid", _struct.sdk_uuid);
+            _protocol.Add("name", _struct.name);
+            _protocol.Add("avatar", _struct.avatar);
+            _protocol.Add("coin", _struct.coin);
+            _protocol.Add("score", _struct.score);
+            return _protocol;
+        }
+        public static player_rank_info protcol_to_player_rank_info(MsgPack.MessagePackObjectDictionary _protocol){
+            var _structf51c92c0_ff99_3f1e_b93a_6053f400c8db = new player_rank_info();
+            foreach (var i in _protocol){
+                if (((MsgPack.MessagePackObject)i.Key).AsString() == "guid"){
+                    _structf51c92c0_ff99_3f1e_b93a_6053f400c8db.guid = ((MsgPack.MessagePackObject)i.Value).AsInt64();
+                }
+                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "sdk_uuid"){
+                    _structf51c92c0_ff99_3f1e_b93a_6053f400c8db.sdk_uuid = ((MsgPack.MessagePackObject)i.Value).AsString();
+                }
+                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "name"){
+                    _structf51c92c0_ff99_3f1e_b93a_6053f400c8db.name = ((MsgPack.MessagePackObject)i.Value).AsString();
+                }
+                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "avatar"){
+                    _structf51c92c0_ff99_3f1e_b93a_6053f400c8db.avatar = ((MsgPack.MessagePackObject)i.Value).AsString();
+                }
+                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "coin"){
+                    _structf51c92c0_ff99_3f1e_b93a_6053f400c8db.coin = ((MsgPack.MessagePackObject)i.Value).AsInt32();
+                }
+                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "score"){
+                    _structf51c92c0_ff99_3f1e_b93a_6053f400c8db.score = ((MsgPack.MessagePackObject)i.Value).AsInt32();
+                }
+            }
+            return _structf51c92c0_ff99_3f1e_b93a_6053f400c8db;
+        }
+    }
+
+    public class rank_item
+    {
+        public Int64 guid;
+        public Int64 score;
+        public Int32 rank;
+        public byte[] item;
+        public static MsgPack.MessagePackObjectDictionary rank_item_to_protcol(rank_item _struct){
+            var _protocol = new MsgPack.MessagePackObjectDictionary();
+            _protocol.Add("guid", _struct.guid);
+            _protocol.Add("score", _struct.score);
+            _protocol.Add("rank", _struct.rank);
+            _protocol.Add("item", _struct.item);
+            return _protocol;
+        }
+        public static rank_item protcol_to_rank_item(MsgPack.MessagePackObjectDictionary _protocol){
+            var _struct8e307fd3_8e06_3971_adaf_10e42d498ea0 = new rank_item();
+            foreach (var i in _protocol){
+                if (((MsgPack.MessagePackObject)i.Key).AsString() == "guid"){
+                    _struct8e307fd3_8e06_3971_adaf_10e42d498ea0.guid = ((MsgPack.MessagePackObject)i.Value).AsInt64();
+                }
+                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "score"){
+                    _struct8e307fd3_8e06_3971_adaf_10e42d498ea0.score = ((MsgPack.MessagePackObject)i.Value).AsInt64();
+                }
+                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "rank"){
+                    _struct8e307fd3_8e06_3971_adaf_10e42d498ea0.rank = ((MsgPack.MessagePackObject)i.Value).AsInt32();
+                }
+                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "item"){
+                    _struct8e307fd3_8e06_3971_adaf_10e42d498ea0.item = ((MsgPack.MessagePackObject)i.Value).AsBinary();
+                }
+            }
+            return _struct8e307fd3_8e06_3971_adaf_10e42d498ea0;
+        }
+    }
+
 /*this module code is codegen by abelkhan codegen for c#*/
 
 }

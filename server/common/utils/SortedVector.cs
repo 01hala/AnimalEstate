@@ -1,10 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace abelkhan
 {
     public class SortedVector<TKey, TValue>
     {
         private SortedList<TKey, TValue> datas;
+        public SortedList<TKey, TValue> Datas
+        {
+            get { return datas; }
+        }
 
         public SortedVector()
         {
@@ -37,6 +44,33 @@ namespace abelkhan
         {
             public SortedVectorException(string msg) : base(msg) {}
         }
+
+        public int IndexOfKey(TKey key)
+        {
+            return datas.IndexOfKey(key);
+        }
+
+        public void RemoveAt(int index)
+        {
+            datas.RemoveAt(index);
+        }
+
+        public TKey GetKeyByIndex(int index)
+        {
+            var cindex = 0;
+            foreach (var i in datas)
+            {
+                if (cindex == index)
+                {
+                    return i.Key;
+                }
+
+                cindex++;
+            }
+
+            throw new SortedVectorException("index out of range!");
+        }
+
         public TValue GetValueByIndex(int index)
         {
             var cindex = 0;

@@ -12,6 +12,8 @@ namespace constant
 
         public static readonly string player_db_guid_collection = "guid";
 
+        public static readonly string player_db_rank_collection = "rank";
+
         public static readonly RecyclableMemoryStreamManager rcStMgr = new();
 
         public const long RedisMQTickTime = 33;

@@ -574,4 +574,76 @@ export function protcol_to_svr_info(_protocol:any){
     return _struct;
 }
 
+export class player_rank_info
+{
+    public guid : number = 0;
+    public sdk_uuid : string = "";
+    public name : string = "";
+    public avatar : string = "";
+    public coin : number = 0;
+    public score : number = 0;
+
+}
+
+export function player_rank_info_to_protcol(_struct:player_rank_info){
+    return _struct;
+}
+
+export function protcol_to_player_rank_info(_protocol:any){
+    let _struct = new player_rank_info();
+    for (const [key, val] of Object.entries(_protocol)) {
+        if (key === "guid"){
+            _struct.guid = val as number;
+        }
+        else if (key === "sdk_uuid"){
+            _struct.sdk_uuid = val as string;
+        }
+        else if (key === "name"){
+            _struct.name = val as string;
+        }
+        else if (key === "avatar"){
+            _struct.avatar = val as string;
+        }
+        else if (key === "coin"){
+            _struct.coin = val as number;
+        }
+        else if (key === "score"){
+            _struct.score = val as number;
+        }
+    }
+    return _struct;
+}
+
+export class rank_item
+{
+    public guid : number = 0;
+    public score : number = 0;
+    public rank : number = 0;
+    public item : Uint8Array = Uint8Array.from([]);
+
+}
+
+export function rank_item_to_protcol(_struct:rank_item){
+    return _struct;
+}
+
+export function protcol_to_rank_item(_protocol:any){
+    let _struct = new rank_item();
+    for (const [key, val] of Object.entries(_protocol)) {
+        if (key === "guid"){
+            _struct.guid = val as number;
+        }
+        else if (key === "score"){
+            _struct.score = val as number;
+        }
+        else if (key === "rank"){
+            _struct.rank = val as number;
+        }
+        else if (key === "item"){
+            _struct.item = val as Uint8Array;
+        }
+    }
+    return _struct;
+}
+
 /*this module code is codegen by abelkhan codegen for typescript*/

@@ -3,10 +3,12 @@ using hub;
 using log;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MsgPack.Serialization;
 using service;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace player
 {
@@ -331,8 +333,29 @@ namespace player
                 if (_info.guid == info.guid)
                 {
                     _info.coin += info.award_coin;
-                    _info.score += info.award_score;
+                    _info.score++;
                     save_role_db_info();
+
+                    var _player_rank_info = new player_rank_info()
+                    {
+                        guid = _info.guid,
+                        sdk_uuid = _info.sdk_uuid,
+                        name = _info.name,
+                        avatar = _info.avatar,
+                        coin = _info.coin,
+                        score = _info.score,
+                    };
+                    using var st = constant.constant.rcStMgr.GetStream();
+                    var _serializer = MessagePackSerializer.Get<player_rank_info>();
+                    _serializer.Pack(st, _player_rank_info);
+                    var rank_item = new rank_item()
+                    {
+                        guid = _info.guid,
+                        score = _info.score,
+                        item = st.ToArray()
+                    };
+                    player.rank_Proxy.update_rank_item("rank", rank_item);
+
                     return;
                 }
             }

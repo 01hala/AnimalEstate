@@ -19,6 +19,7 @@ namespace player
         public static readonly match_proxy_mng match_Proxy_Mng = new ();
         public static readonly room_proxy_mng room_Proxy_Mng = new ();
         public static readonly player_proxy_mng player_Proxy_Mng = new ();
+        public static rank_proxy rank_Proxy;
 
         public static offline_msg_mng offline_Msg_Mng = new (constant.constant.player_db_name, constant.constant.player_db_offline_msg_collection);
 
@@ -85,6 +86,10 @@ namespace player
             else if (_proxy.type == "player")
             {
                 player_Proxy_Mng.reg_player_proxy(_proxy);
+            }
+            else if (_proxy.type == "rank")
+            {
+                rank_Proxy = new rank_proxy(_proxy);
             }
         }
     }

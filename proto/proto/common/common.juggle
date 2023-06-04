@@ -207,3 +207,19 @@ struct svr_info
 	int32 tick_time;
 	int32 player_num;
 }
+
+struct player_rank_info {
+	int64 guid;
+	string sdk_uuid;
+	string name;
+	string avatar;
+	int32 coin;
+	int32 score;
+}
+
+struct rank_item {
+	int64 guid;
+	int64 score;
+	int32 rank;
+	bin item;
+}
