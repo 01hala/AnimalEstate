@@ -4,11 +4,78 @@ import * as common from "./common";
 
 /*this struct code is codegen by abelkhan codegen for typescript*/
 /*this caller code is codegen by abelkhan codegen for typescript*/
+export class game_cancel_game_cb{
+    private cb_uuid : number;
+    private module_rsp_cb : game_rsp_cb;
+
+    public event_cancel_game_handle_cb : ()=>void | null;
+    public event_cancel_game_handle_err : ()=>void | null;
+    public event_cancel_game_handle_timeout : ()=>void | null;
+    constructor(_cb_uuid : number, _module_rsp_cb : game_rsp_cb){
+        this.cb_uuid = _cb_uuid;
+        this.module_rsp_cb = _module_rsp_cb;
+        this.event_cancel_game_handle_cb = null;
+        this.event_cancel_game_handle_err = null;
+        this.event_cancel_game_handle_timeout = null;
+    }
+
+    callBack(_cb:()=>void, _err:()=>void)
+    {
+        this.event_cancel_game_handle_cb = _cb;
+        this.event_cancel_game_handle_err = _err;
+        return this;
+    }
+
+    timeout(tick:number, timeout_cb:()=>void)
+    {
+        setTimeout(()=>{ this.module_rsp_cb.cancel_game_timeout(this.cb_uuid); }, tick);
+        this.event_cancel_game_handle_timeout = timeout_cb;
+    }
+
+}
+
 /*this cb code is codegen by abelkhan for ts*/
 export class game_rsp_cb extends client_handle.imodule {
+    public map_cancel_game:Map<number, game_cancel_game_cb>;
     constructor(modules:client_handle.modulemng){
         super();
+        this.map_cancel_game = new Map<number, game_cancel_game_cb>();
+        modules.add_method("game_rsp_cb_cancel_game_rsp", this.cancel_game_rsp.bind(this));
+        modules.add_method("game_rsp_cb_cancel_game_err", this.cancel_game_err.bind(this));
     }
+    public cancel_game_rsp(inArray:any[]){
+        let uuid = inArray[0];
+        let _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b:any[] = [];
+        var rsp = this.try_get_and_del_cancel_game_cb(uuid);
+        if (rsp && rsp.event_cancel_game_handle_cb) {
+            rsp.event_cancel_game_handle_cb.apply(null, _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b);
+        }
+    }
+
+    public cancel_game_err(inArray:any[]){
+        let uuid = inArray[0];
+        let _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b:any[] = [];
+        var rsp = this.try_get_and_del_cancel_game_cb(uuid);
+        if (rsp && rsp.event_cancel_game_handle_err) {
+            rsp.event_cancel_game_handle_err.apply(null, _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b);
+        }
+    }
+
+    public cancel_game_timeout(cb_uuid : number){
+        let rsp = this.try_get_and_del_cancel_game_cb(cb_uuid);
+        if (rsp){
+            if (rsp.event_cancel_game_handle_timeout) {
+                rsp.event_cancel_game_handle_timeout.apply(null);
+            }
+        }
+    }
+
+    private try_get_and_del_cancel_game_cb(uuid : number){
+        var rsp = this.map_cancel_game.get(uuid);
+        this.map_cancel_game.delete(uuid);
+        return rsp;
+    }
+
 }
 
 let rsp_cb_game_handle : game_rsp_cb | null = null;
@@ -92,6 +159,18 @@ export class game_hubproxy
     public cancel_auto(){
         let _argv_31dd4b62_c4d1_3244_801b_586f309b805d:any[] = [];
         this._client_handle.call_hub(this.hub_name_b8b9723b_52d5_3bc2_8583_8bf5fd51de47, "game_cancel_auto", _argv_31dd4b62_c4d1_3244_801b_586f309b805d);
+    }
+
+    public cancel_game(){
+        let uuid_b75bfcdc_9de4_53c5_b31e_af9c4d3ae88a = Math.round(this.uuid_b8b9723b_52d5_3bc2_8583_8bf5fd51de47++);
+
+        let _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b:any[] = [uuid_b75bfcdc_9de4_53c5_b31e_af9c4d3ae88a];
+        this._client_handle.call_hub(this.hub_name_b8b9723b_52d5_3bc2_8583_8bf5fd51de47, "game_cancel_game", _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b);
+        let cb_cancel_game_obj = new game_cancel_game_cb(uuid_b75bfcdc_9de4_53c5_b31e_af9c4d3ae88a, rsp_cb_game_handle);
+        if (rsp_cb_game_handle){
+            rsp_cb_game_handle.map_cancel_game.set(uuid_b75bfcdc_9de4_53c5_b31e_af9c4d3ae88a, cb_cancel_game_obj);
+        }
+        return cb_cancel_game_obj;
     }
 
 }

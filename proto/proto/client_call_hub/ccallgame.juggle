@@ -17,4 +17,6 @@ module game{
 	choose_animal ntf(int16 animal_index);
 	
 	cancel_auto ntf();
+
+	cancel_game req() rsp() err();
 }

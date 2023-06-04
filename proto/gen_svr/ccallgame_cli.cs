@@ -10,10 +10,106 @@ namespace abelkhan
 
 /*this struct code is codegen by abelkhan codegen for c#*/
 /*this caller code is codegen by abelkhan codegen for c#*/
+    public class game_cancel_game_cb
+    {
+        private UInt64 cb_uuid;
+        private game_rsp_cb module_rsp_cb;
+
+        public game_cancel_game_cb(UInt64 _cb_uuid, game_rsp_cb _module_rsp_cb)
+        {
+            cb_uuid = _cb_uuid;
+            module_rsp_cb = _module_rsp_cb;
+        }
+
+        public event Action on_cancel_game_cb;
+        public event Action on_cancel_game_err;
+        public event Action on_cancel_game_timeout;
+
+        public game_cancel_game_cb callBack(Action cb, Action err)
+        {
+            on_cancel_game_cb += cb;
+            on_cancel_game_err += err;
+            return this;
+        }
+
+        public void timeout(UInt64 tick, Action timeout_cb)
+        {
+            TinyTimer.add_timer(tick, ()=>{
+                module_rsp_cb.cancel_game_timeout(cb_uuid);
+            });
+            on_cancel_game_timeout += timeout_cb;
+        }
+
+        public void call_cb()
+        {
+            if (on_cancel_game_cb != null)
+            {
+                on_cancel_game_cb();
+            }
+        }
+
+        public void call_err()
+        {
+            if (on_cancel_game_err != null)
+            {
+                on_cancel_game_err();
+            }
+        }
+
+        public void call_timeout()
+        {
+            if (on_cancel_game_timeout != null)
+            {
+                on_cancel_game_timeout();
+            }
+        }
+
+    }
+
 /*this cb code is codegen by abelkhan for c#*/
     public class game_rsp_cb : common.imodule {
+        public Dictionary<UInt64, game_cancel_game_cb> map_cancel_game;
         public game_rsp_cb(common.modulemanager modules)
         {
+            map_cancel_game = new Dictionary<UInt64, game_cancel_game_cb>();
+            modules.add_mothed("game_rsp_cb_cancel_game_rsp", cancel_game_rsp);
+            modules.add_mothed("game_rsp_cb_cancel_game_err", cancel_game_err);
+        }
+
+        public void cancel_game_rsp(IList<MsgPack.MessagePackObject> inArray){
+            var uuid = ((MsgPack.MessagePackObject)inArray[0]).AsUInt64();
+            var rsp = try_get_and_del_cancel_game_cb(uuid);
+            if (rsp != null)
+            {
+                rsp.call_cb();
+            }
+        }
+
+        public void cancel_game_err(IList<MsgPack.MessagePackObject> inArray){
+            var uuid = ((MsgPack.MessagePackObject)inArray[0]).AsUInt64();
+            var rsp = try_get_and_del_cancel_game_cb(uuid);
+            if (rsp != null)
+            {
+                rsp.call_err();
+            }
+        }
+
+        public void cancel_game_timeout(UInt64 cb_uuid){
+            var rsp = try_get_and_del_cancel_game_cb(cb_uuid);
+            if (rsp != null){
+                rsp.call_timeout();
+            }
+        }
+
+        private game_cancel_game_cb try_get_and_del_cancel_game_cb(UInt64 uuid){
+            lock(map_cancel_game)
+            {
+                if (map_cancel_game.TryGetValue(uuid, out game_cancel_game_cb rsp))
+                {
+                    map_cancel_game.Remove(uuid);
+                }
+                return rsp;
+            }
         }
 
     }
@@ -107,6 +203,19 @@ namespace abelkhan
         public void cancel_auto(){
             var _argv_31dd4b62_c4d1_3244_801b_586f309b805d = new ArrayList();
             _client_handle.call_hub(hub_name_b8b9723b_52d5_3bc2_8583_8bf5fd51de47, "game_cancel_auto", _argv_31dd4b62_c4d1_3244_801b_586f309b805d);
+        }
+
+        public game_cancel_game_cb cancel_game(){
+            var uuid_b75bfcdc_9de4_53c5_b31e_af9c4d3ae88a = (UInt64)Interlocked.Increment(ref uuid_b8b9723b_52d5_3bc2_8583_8bf5fd51de47);
+
+            var _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b = new ArrayList();
+            _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b.Add(uuid_b75bfcdc_9de4_53c5_b31e_af9c4d3ae88a);
+            _client_handle.call_hub(hub_name_b8b9723b_52d5_3bc2_8583_8bf5fd51de47, "game_cancel_game", _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b);
+
+            var cb_cancel_game_obj = new game_cancel_game_cb(uuid_b75bfcdc_9de4_53c5_b31e_af9c4d3ae88a, rsp_cb_game_handle);
+            lock(rsp_cb_game_handle.map_cancel_game)
+            {                rsp_cb_game_handle.map_cancel_game.Add(uuid_b75bfcdc_9de4_53c5_b31e_af9c4d3ae88a, cb_cancel_game_obj);
+            }            return cb_cancel_game_obj;
         }
 
     }

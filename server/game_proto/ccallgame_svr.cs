@@ -10,6 +10,29 @@ namespace abelkhan
 
 /*this struct code is codegen by abelkhan codegen for c#*/
 /*this module code is codegen by abelkhan codegen for c#*/
+    public class game_cancel_game_rsp : common.Response {
+        private string _client_uuid_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b;
+        private UInt64 uuid_d177c3cd_ad18_3e8f_96b3_9bc18f137c9a;
+        public game_cancel_game_rsp(string client_uuid, UInt64 _uuid)
+        {
+            _client_uuid_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b = client_uuid;
+            uuid_d177c3cd_ad18_3e8f_96b3_9bc18f137c9a = _uuid;
+        }
+
+        public void rsp(){
+            var _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b = new ArrayList();
+            _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b.Add(uuid_d177c3cd_ad18_3e8f_96b3_9bc18f137c9a);
+            hub.hub._gates.call_client(_client_uuid_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b, "game_rsp_cb_cancel_game_rsp", _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b);
+        }
+
+        public void err(){
+            var _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b = new ArrayList();
+            _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b.Add(uuid_d177c3cd_ad18_3e8f_96b3_9bc18f137c9a);
+            hub.hub._gates.call_client(_client_uuid_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b, "game_rsp_cb_cancel_game_err", _argv_51dfb5e9_b19e_3fc5_b7b3_c26a546e5e9b);
+        }
+
+    }
+
     public class game_module : common.imodule {
         public game_module()
         {
@@ -21,6 +44,7 @@ namespace abelkhan
             hub.hub._modules.add_mothed("game_throw_dice", throw_dice);
             hub.hub._modules.add_mothed("game_choose_animal", choose_animal);
             hub.hub._modules.add_mothed("game_cancel_auto", cancel_auto);
+            hub.hub._modules.add_mothed("game_cancel_game", cancel_game);
         }
 
         public event Action<Int64> on_into_game;
@@ -90,6 +114,16 @@ namespace abelkhan
             if (on_cancel_auto != null){
                 on_cancel_auto();
             }
+        }
+
+        public event Action on_cancel_game;
+        public void cancel_game(IList<MsgPack.MessagePackObject> inArray){
+            var _cb_uuid = ((MsgPack.MessagePackObject)inArray[0]).AsUInt64();
+            rsp = new game_cancel_game_rsp(hub.hub._gates.current_client_uuid, _cb_uuid);
+            if (on_cancel_game != null){
+                on_cancel_game();
+            }
+            rsp = null;
         }
 
     }

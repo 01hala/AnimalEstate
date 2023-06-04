@@ -19,6 +19,23 @@ namespace game
             game_Module.on_throw_dice += Game_Module_on_throw_dice;
             game_Module.on_choose_animal += Game_Module_on_choose_animal;
             game_Module.on_cancel_auto += Game_Module_on_cancel_auto;
+            game_Module.on_cancel_game += Game_Module_on_cancel_game;
+        }
+
+        private void Game_Module_on_cancel_game()
+        {
+            log.log.trace($"on_cancel_game begin!");
+
+            var uuid = hub.hub._gates.current_client_uuid;
+            var _client = game._game_mng.get_player(uuid);
+            try
+            {
+                _client.set_auto_active(true);
+            }
+            catch (System.Exception ex)
+            {
+                log.log.err($"{ex}");
+            }
         }
 
         private void Game_Module_on_cancel_auto()
