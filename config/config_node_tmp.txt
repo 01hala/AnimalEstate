@@ -60,6 +60,13 @@
 		"log_dir":"./log/"
     },
 
+	"rank":{
+		"name":"rank",
+		"log_level":"trace",
+		"log_file":"rank.txt",
+		"log_dir":"./log/"
+	},
+
 	"room":{
 		"name":"room",
 		"log_level":"trace",
