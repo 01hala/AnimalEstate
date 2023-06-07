@@ -157,7 +157,36 @@ namespace Rank
                 task.SetResult();
             });
 
+            hub.hub._timer.addticktime(30 * 60 * 1000, tick_save_rank);
+
             return task.Task;
+        }
+
+        private static void tick_save_rank(long tick)
+        {
+            try
+            {
+                foreach(var rank in rankDict.Values)
+                {
+                    var query = new DBQueryHelper();
+                    query.condition("name", rank.name);
+                    var doc = rank.ToBsonDocument();
+                    hub.hub.get_random_dbproxyproxy().getCollection(dbName, dbCollection).updataPersistedObject(query.query(), doc, true, (result) => {
+                        if (result != dbproxyproxy.EM_DB_RESULT.EM_DB_SUCESSED)
+                        {
+                            log.log.err($"tick_save_rank {rank.name} faild:{result}!");
+                        }
+                    });
+                }
+            }
+            catch (System.Exception ex)
+            {
+                log.log.err($"tick_save_rank ex:{ex}!");
+            }
+            finally
+            {
+                hub.hub._timer.addticktime(30 * 60 * 1000, tick_save_rank);
+            }
         }
 
         private static void Rank_svr_Service_Module_on_update_rank_item(string rankNmae, rank_item item)
