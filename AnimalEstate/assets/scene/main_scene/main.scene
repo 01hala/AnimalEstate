@@ -552,7 +552,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "money",
+    "_name": "score",
     "_objFlags": 0,
     "_parent": {
       "__id__": 6
@@ -1833,7 +1833,7 @@
     "user_name": {
       "__id__": 12
     },
-    "money": {
+    "score": {
       "__id__": 15
     },
     "ranking": {
@@ -1874,6 +1874,10 @@
     },
     "match_interface_prefab": {
       "__uuid__": "7eeae493-e59c-4762-9383-896440dbe9d4",
+      "__expectedType__": "cc.Prefab"
+    },
+    "rank_frame_prefab": {
+      "__uuid__": "25ac3f9f-9fe5-4ceb-b271-e23584ded2ae",
       "__expectedType__": "cc.Prefab"
     },
     "friend_frame_prefab": {

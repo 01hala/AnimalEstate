@@ -8,8 +8,7 @@
       "__id__": 1
     },
     "optimizationPolicy": 0,
-    "persistent": false,
-    "asyncLoadAssets": false
+    "persistent": false
   },
   {
     "__type__": "cc.Node",
@@ -65,6 +64,7 @@
       "y": 1,
       "z": 1
     },
+    "_mobility": 0,
     "_layer": 33554432,
     "_euler": {
       "__type__": "cc.Vec3",
@@ -120,6 +120,7 @@
       "y": 1,
       "z": 1
     },
+    "_mobility": 0,
     "_layer": 33554432,
     "_euler": {
       "__type__": "cc.Vec3",
@@ -165,6 +166,7 @@
       "y": 1,
       "z": 1
     },
+    "_mobility": 0,
     "_layer": 33554432,
     "_euler": {
       "__type__": "cc.Vec3",
@@ -209,7 +211,10 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "6fpu92haFLzYekQC7h2IcN"
+    "fileId": "6fpu92haFLzYekQC7h2IcN",
+    "instance": null,
+    "targetOverrides": null,
+    "nestedPrefabInstanceRoots": null
   },
   {
     "__type__": "cc.UITransform",
@@ -312,7 +317,10 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "64VTIV2UFInZmwBy2tz+Y7"
+    "fileId": "64VTIV2UFInZmwBy2tz+Y7",
+    "instance": null,
+    "targetOverrides": null,
+    "nestedPrefabInstanceRoots": null
   },
   {
     "__type__": "cc.Node",
@@ -353,6 +361,7 @@
       "y": 1,
       "z": 1
     },
+    "_mobility": 0,
     "_layer": 33554432,
     "_euler": {
       "__type__": "cc.Vec3",
@@ -441,7 +450,10 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "c7PPWfY79KnKgXkhhZwpHw"
+    "fileId": "c7PPWfY79KnKgXkhhZwpHw",
+    "instance": null,
+    "targetOverrides": null,
+    "nestedPrefabInstanceRoots": null
   },
   {
     "__type__": "cc.Node",
@@ -485,6 +497,7 @@
       "y": 1,
       "z": 1
     },
+    "_mobility": 0,
     "_layer": 33554432,
     "_euler": {
       "__type__": "cc.Vec3",
@@ -595,7 +608,10 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "ddsK6eZ+NGzZT3JiPylUtN"
+    "fileId": "ddsK6eZ+NGzZT3JiPylUtN",
+    "instance": null,
+    "targetOverrides": null,
+    "nestedPrefabInstanceRoots": null
   },
   {
     "__type__": "cc.UITransform",
@@ -713,7 +729,7 @@
       "__id__": 32
     },
     "friend_frame": {
-      "__uuid__": "a8f17b73-350c-4f64-bf84-42f75ca674df",
+      "__uuid__": "88a0de82-cfd6-46d0-a254-7a4751d7296e",
       "__expectedType__": "cc.Prefab"
     },
     "avatar_frame": {
@@ -738,6 +754,8 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "0dGgmL685O+ZHesiSWLHCI"
+    "fileId": "0dGgmL685O+ZHesiSWLHCI",
+    "instance": null,
+    "targetOverrides": null
   }
 ]

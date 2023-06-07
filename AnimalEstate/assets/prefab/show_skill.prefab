@@ -139,8 +139,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 100,
-      "height": 64
+      "width": 70,
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3997,15 +3997,6 @@
     "altec_lightwave_text": {
       "__id__": 132
     },
-    "reset_position_img": {
-      "__id__": 96
-    },
-    "reset_position_name": {
-      "__id__": 102
-    },
-    "reset_position_text": {
-      "__id__": 162
-    },
     "_id": ""
   },
   {
@@ -4262,15 +4253,6 @@
     },
     "altec_lightwave_text": {
       "__id__": 132
-    },
-    "reset_position_img": {
-      "__id__": 96
-    },
-    "reset_position_name": {
-      "__id__": 102
-    },
-    "reset_position_text": {
-      "__id__": 162
     },
     "_id": ""
   },

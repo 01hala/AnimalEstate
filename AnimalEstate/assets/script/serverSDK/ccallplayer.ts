@@ -8,7 +8,7 @@ export class player_login_player_login_cb{
     private cb_uuid : number;
     private module_rsp_cb : player_login_rsp_cb;
 
-    public event_player_login_handle_cb : (info:common.player_info)=>void | null;
+    public event_player_login_handle_cb : (info:common.player_info, rank_svr_name:string)=>void | null;
     public event_player_login_handle_err : (err:number)=>void | null;
     public event_player_login_handle_timeout : ()=>void | null;
     constructor(_cb_uuid : number, _module_rsp_cb : player_login_rsp_cb){
@@ -19,7 +19,7 @@ export class player_login_player_login_cb{
         this.event_player_login_handle_timeout = null;
     }
 
-    callBack(_cb:(info:common.player_info)=>void, _err:(err:number)=>void)
+    callBack(_cb:(info:common.player_info, rank_svr_name:string)=>void, _err:(err:number)=>void)
     {
         this.event_player_login_handle_cb = _cb;
         this.event_player_login_handle_err = _err;
@@ -38,7 +38,7 @@ export class player_login_create_role_cb{
     private cb_uuid : number;
     private module_rsp_cb : player_login_rsp_cb;
 
-    public event_create_role_handle_cb : (info:common.player_info)=>void | null;
+    public event_create_role_handle_cb : (info:common.player_info, rank_svr_name:string)=>void | null;
     public event_create_role_handle_err : (err:number)=>void | null;
     public event_create_role_handle_timeout : ()=>void | null;
     constructor(_cb_uuid : number, _module_rsp_cb : player_login_rsp_cb){
@@ -49,7 +49,7 @@ export class player_login_create_role_cb{
         this.event_create_role_handle_timeout = null;
     }
 
-    callBack(_cb:(info:common.player_info)=>void, _err:(err:number)=>void)
+    callBack(_cb:(info:common.player_info, rank_svr_name:string)=>void, _err:(err:number)=>void)
     {
         this.event_create_role_handle_cb = _cb;
         this.event_create_role_handle_err = _err;
@@ -81,6 +81,7 @@ export class player_login_rsp_cb extends client_handle.imodule {
         let uuid = inArray[0];
         let _argv_803b03c3_eef6_3b5c_a790_4cd13c6c4e4b:any[] = [];
         _argv_803b03c3_eef6_3b5c_a790_4cd13c6c4e4b.push(common.protcol_to_player_info(inArray[1]));
+        _argv_803b03c3_eef6_3b5c_a790_4cd13c6c4e4b.push(inArray[2]);
         var rsp = this.try_get_and_del_player_login_cb(uuid);
         if (rsp && rsp.event_player_login_handle_cb) {
             rsp.event_player_login_handle_cb.apply(null, _argv_803b03c3_eef6_3b5c_a790_4cd13c6c4e4b);
@@ -116,6 +117,7 @@ export class player_login_rsp_cb extends client_handle.imodule {
         let uuid = inArray[0];
         let _argv_30293c4a_8f5b_307e_a08a_ff76e003f95d:any[] = [];
         _argv_30293c4a_8f5b_307e_a08a_ff76e003f95d.push(common.protcol_to_player_info(inArray[1]));
+        _argv_30293c4a_8f5b_307e_a08a_ff76e003f95d.push(inArray[2]);
         var rsp = this.try_get_and_del_create_role_cb(uuid);
         if (rsp && rsp.event_create_role_handle_cb) {
             rsp.event_create_role_handle_cb.apply(null, _argv_30293c4a_8f5b_307e_a08a_ff76e003f95d);

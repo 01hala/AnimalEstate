@@ -412,7 +412,7 @@ namespace player
             try
             {
                 var _proxy = await player.client_Mng.create_player(uuid, name, nick_name, avatar);
-                rsp.rsp(_proxy.PlayerInfo);
+                rsp.rsp(_proxy.PlayerInfo, player.rank_Proxy.name);
             }
             catch (LoginException ex)
             {
@@ -440,7 +440,7 @@ namespace player
                     _proxy.PlayerInfo.name = name;
                     _proxy.PlayerInfo.avatar = avatar_url;
                     _proxy.save_role_db_info();
-                    rsp.rsp(_proxy.PlayerInfo);
+                    rsp.rsp(_proxy.PlayerInfo, player.rank_Proxy.name);
 
                     var room_key = redis_help.BuildPlayerRoomCacheKey(_proxy.PlayerInfo.guid);
                     var room_hub_name = await player._redis_handle.GetStrData(room_key);

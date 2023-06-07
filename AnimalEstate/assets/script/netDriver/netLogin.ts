@@ -31,6 +31,7 @@ export class netLogin {
         
     }
 
+    public rank_svr_name : string = "";
     public player_info : common.player_info;
     public cb_player_login_sucess : () => void;
     public cb_player_login_non_account : () => void;
@@ -40,7 +41,8 @@ export class netLogin {
                 this.c_login_caller.get_hub(login_hub.hub_name).player_login_no_author(code).callBack((player_hub_name, token)=>{
                     this.player_name = player_hub_name;
                             
-                    this.c_player_login_caller.get_hub(player_hub_name).player_login(token, nick_name, avatar_url).callBack((player_info)=>{
+                    this.c_player_login_caller.get_hub(player_hub_name).player_login(token, nick_name, avatar_url).callBack((player_info, rank_svr_name)=>{
+                        this.rank_svr_name = rank_svr_name;
                         this.player_info = player_info;
                         this.cb_player_login_sucess.call(null);
                     }, (err)=>{
@@ -65,7 +67,8 @@ export class netLogin {
 
     public create_role(name, nick_name:string, avatar_url:string){
         console.log("begin create role!");
-        this.c_player_login_caller.get_hub(this.player_name).create_role(name, nick_name, avatar_url).callBack((player_info)=>{
+        this.c_player_login_caller.get_hub(this.player_name).create_role(name, nick_name, avatar_url).callBack((player_info, rank_svr_name)=>{
+            this.rank_svr_name = rank_svr_name;
             this.player_info = player_info;
             this.cb_player_login_sucess.call(null);
         }, (err)=>{

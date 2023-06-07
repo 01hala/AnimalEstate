@@ -19,10 +19,11 @@ namespace abelkhan
             uuid_ade41c97_e005_3aac_9b68_925d09412afe = _uuid;
         }
 
-        public void rsp(player_info info_391fd3d4_2d55_3f5e_9223_7f450a814a15){
+        public void rsp(player_info info_391fd3d4_2d55_3f5e_9223_7f450a814a15, string rank_svr_name_92542521_08c4_3918_9200_237cf1cfc68a){
             var _argv_803b03c3_eef6_3b5c_a790_4cd13c6c4e4b = new ArrayList();
             _argv_803b03c3_eef6_3b5c_a790_4cd13c6c4e4b.Add(uuid_ade41c97_e005_3aac_9b68_925d09412afe);
             _argv_803b03c3_eef6_3b5c_a790_4cd13c6c4e4b.Add(player_info.player_info_to_protcol(info_391fd3d4_2d55_3f5e_9223_7f450a814a15));
+            _argv_803b03c3_eef6_3b5c_a790_4cd13c6c4e4b.Add(rank_svr_name_92542521_08c4_3918_9200_237cf1cfc68a);
             hub.hub._gates.call_client(_client_uuid_803b03c3_eef6_3b5c_a790_4cd13c6c4e4b, "player_login_rsp_cb_player_login_rsp", _argv_803b03c3_eef6_3b5c_a790_4cd13c6c4e4b);
         }
 
@@ -44,10 +45,11 @@ namespace abelkhan
             uuid_9b570d40_93db_3172_b2b2_238a3ebca94b = _uuid;
         }
 
-        public void rsp(player_info info_391fd3d4_2d55_3f5e_9223_7f450a814a15){
+        public void rsp(player_info info_391fd3d4_2d55_3f5e_9223_7f450a814a15, string rank_svr_name_92542521_08c4_3918_9200_237cf1cfc68a){
             var _argv_30293c4a_8f5b_307e_a08a_ff76e003f95d = new ArrayList();
             _argv_30293c4a_8f5b_307e_a08a_ff76e003f95d.Add(uuid_9b570d40_93db_3172_b2b2_238a3ebca94b);
             _argv_30293c4a_8f5b_307e_a08a_ff76e003f95d.Add(player_info.player_info_to_protcol(info_391fd3d4_2d55_3f5e_9223_7f450a814a15));
+            _argv_30293c4a_8f5b_307e_a08a_ff76e003f95d.Add(rank_svr_name_92542521_08c4_3918_9200_237cf1cfc68a);
             hub.hub._gates.call_client(_client_uuid_30293c4a_8f5b_307e_a08a_ff76e003f95d, "player_login_rsp_cb_create_role_rsp", _argv_30293c4a_8f5b_307e_a08a_ff76e003f95d);
         }
 

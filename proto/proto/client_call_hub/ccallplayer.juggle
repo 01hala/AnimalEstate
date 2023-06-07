@@ -1,8 +1,8 @@
 import common
 
 module player_login{
-	player_login req(string token, string nick_name, string avatar_url) rsp(player_info info) err(int32 err);
-	create_role req(string name, string nick_name, string avatar_url) rsp(player_info info) err(int32 err);
+	player_login req(string token, string nick_name, string avatar_url) rsp(player_info info, string rank_svr_name) err(int32 err);
+	create_role req(string name, string nick_name, string avatar_url) rsp(player_info info, string rank_svr_name) err(int32 err);
 }
 
 module client_match{

@@ -37,10 +37,11 @@ export class main_invite_friend extends Component {
             let _friend_frame = instantiate(this.friend_frame);
             
             util.main_scene.load_img(friend.avatar, (img)=>{
-                let _avatar_frame = new Sprite();
+                let _avatar = instantiate(this.avatar_frame);
+                let _avatar_frame = _avatar.getComponent(Sprite);
                 _avatar_frame.spriteFrame = SpriteFrame.createWithImage(img);
                 _friend_frame.addChild(_avatar_frame.node);
-                _avatar_frame.node.setPosition(-205, 5);
+                _avatar_frame.node.setPosition(-170, 5);
             });
             
             let name_node = instantiate(this.num_frame);
@@ -52,14 +53,14 @@ export class main_invite_friend extends Component {
             _friend_frame.addChild(name_node);
             name_node.setPosition(-108, 26);
 
-            let _coin_node = instantiate(this.num_frame);
-            var coin = _coin_node.getChildByName("num").getComponent(Label);
-            coin.color = new math.Color(195, 90, 90);
-            coin.fontSize = 28;
-            coin.lineHeight = 24;
-            coin.string = friend.coin.toString();
-            _friend_frame.addChild(_coin_node);
-            _coin_node.setPosition(-108, -16);
+            let _guid_node = instantiate(this.num_frame);
+            var guid = _guid_node.getChildByName("num").getComponent(Label);
+            guid.color = new math.Color(195, 90, 90);
+            guid.fontSize = 28;
+            guid.lineHeight = 24;
+            guid.string = friend.guid.toString();
+            _friend_frame.addChild(_guid_node);
+            _guid_node.setPosition(-108, -16);
 
             let _score_node = instantiate(this.num_frame);
             var score = _score_node.getChildByName("num").getComponent(Label);

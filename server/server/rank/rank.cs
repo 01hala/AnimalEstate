@@ -91,7 +91,7 @@ namespace Rank
         {
             var rank = new List<rank_item>();
 
-            for (var i = start; i < end; ++i)
+            for (var i = start; i < end && i < rankList.Count(); ++i)
             {
                 rank.Add(rankList.GetValueByIndex(i));
             }
@@ -113,12 +113,6 @@ namespace Rank
         public static Task Init(string _dbName, string _dbCollection, List<Tuple<string, int> > ranks)
         {
             var task = new TaskCompletionSource();
-
-            rank_Cli_Service_Module.on_get_rank_guid += Rank_Cli_Service_Module_on_get_rank_guid;
-            rank_Cli_Service_Module.on_get_rank_range += Rank_Cli_Service_Module_on_get_rank_range;
-
-            rank_svr_Service_Module.on_get_rank_guid += Rank_svr_Service_Module_on_get_rank_guid;
-            rank_svr_Service_Module.on_update_rank_item += Rank_svr_Service_Module_on_update_rank_item;
 
             dbName = _dbName;
             dbCollection = _dbCollection;
@@ -228,7 +222,7 @@ namespace Rank
 
         public static void Main(string[] args)
         {
-            var _hub = new hub.hub(args[0], args[1], "player");
+            var _hub = new hub.hub(args[0], args[1], "rank");
 
             var _rank_config = hub.hub._config.get_value_list("rank");
             var _rank_info = new List<Tuple<string, int>>();
@@ -237,10 +231,20 @@ namespace Rank
                 var info = _rank_config.get_list_dict(i);
                 _rank_info.Add(Tuple.Create(info.get_value_string("name"), info.get_value_int("capacity")));
             }
-            Init(constant.constant.player_db_name, constant.constant.player_db_rank_collection, _rank_info);
+
+            rank_Cli_Service_Module.on_get_rank_guid += Rank_Cli_Service_Module_on_get_rank_guid;
+            rank_Cli_Service_Module.on_get_rank_range += Rank_Cli_Service_Module_on_get_rank_range;
+
+            rank_svr_Service_Module.on_get_rank_guid += Rank_svr_Service_Module_on_get_rank_guid;
+            rank_svr_Service_Module.on_update_rank_item += Rank_svr_Service_Module_on_update_rank_item;
 
             _hub.onCloseServer += () => {
                 _hub.closeSvr();
+            };
+
+            _hub.onDBProxyInit += () =>
+            {
+                Init(constant.constant.player_db_name, constant.constant.player_db_rank_collection, _rank_info);
             };
 
             log.log.trace("player start ok");

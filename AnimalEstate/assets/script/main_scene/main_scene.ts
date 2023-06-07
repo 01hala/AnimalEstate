@@ -14,7 +14,7 @@ export class main_scene extends Component {
     @property(Label)
     user_name:Label = null;
     @property(Label)
-    money:Label = null;
+    score:Label = null;
 
     @property(Sprite)
     ranking:Sprite = null;
@@ -47,6 +47,8 @@ export class main_scene extends Component {
     @property(Prefab)
     match_interface_prefab:Prefab = null;
     @property(Prefab)
+    rank_frame_prefab:Prefab = null;
+    @property(Prefab)
     friend_frame_prefab:Prefab = null;
     @property(Prefab)
     room_frame_prefab:Prefab = null;
@@ -68,6 +70,7 @@ export class main_scene extends Component {
         console.log("init_btn_touch begin!");
 
         this.start_match_btn.node.on(Node.EventType.TOUCH_START, this.start_match_callback, this);
+        this.ranking.node.on(Node.EventType.TOUCH_START, this.ranking_callback, this);
         this.role.node.on(Node.EventType.TOUCH_START, this.role_callback, this);
         this.skill.node.on(Node.EventType.TOUCH_START, this.skill_callback, this);
         this.props.node.on(Node.EventType.TOUCH_START, this.props_callback, this);
@@ -86,7 +89,7 @@ export class main_scene extends Component {
             }
         });
         this.user_name.string = singleton.netSingleton.login.player_info.name.slice(0, 3) + " " + singleton.netSingleton.login.player_info.guid;
-        this.money.string = singleton.netSingleton.login.player_info.coin.toString();
+        this.score.string = singleton.netSingleton.login.player_info.score.toString();
 
         console.log("init_avatar end!");
     }
@@ -197,6 +200,11 @@ export class main_scene extends Component {
 
         let match_interface = instantiate(this.match_interface_prefab);
         this.main.node.addChild(match_interface);
+    }
+
+    ranking_callback() {
+        let rank_info_interface = instantiate(this.rank_frame_prefab);
+        this.main.node.addChild(rank_info_interface);
     }
 
     role_callback() {

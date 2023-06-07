@@ -21,11 +21,11 @@ namespace abelkhan
             module_rsp_cb = _module_rsp_cb;
         }
 
-        public event Action<player_info> on_player_login_cb;
+        public event Action<player_info, string> on_player_login_cb;
         public event Action<Int32> on_player_login_err;
         public event Action on_player_login_timeout;
 
-        public player_login_player_login_cb callBack(Action<player_info> cb, Action<Int32> err)
+        public player_login_player_login_cb callBack(Action<player_info, string> cb, Action<Int32> err)
         {
             on_player_login_cb += cb;
             on_player_login_err += err;
@@ -40,11 +40,11 @@ namespace abelkhan
             on_player_login_timeout += timeout_cb;
         }
 
-        public void call_cb(player_info info)
+        public void call_cb(player_info info, string rank_svr_name)
         {
             if (on_player_login_cb != null)
             {
-                on_player_login_cb(info);
+                on_player_login_cb(info, rank_svr_name);
             }
         }
 
@@ -77,11 +77,11 @@ namespace abelkhan
             module_rsp_cb = _module_rsp_cb;
         }
 
-        public event Action<player_info> on_create_role_cb;
+        public event Action<player_info, string> on_create_role_cb;
         public event Action<Int32> on_create_role_err;
         public event Action on_create_role_timeout;
 
-        public player_login_create_role_cb callBack(Action<player_info> cb, Action<Int32> err)
+        public player_login_create_role_cb callBack(Action<player_info, string> cb, Action<Int32> err)
         {
             on_create_role_cb += cb;
             on_create_role_err += err;
@@ -96,11 +96,11 @@ namespace abelkhan
             on_create_role_timeout += timeout_cb;
         }
 
-        public void call_cb(player_info info)
+        public void call_cb(player_info info, string rank_svr_name)
         {
             if (on_create_role_cb != null)
             {
-                on_create_role_cb(info);
+                on_create_role_cb(info, rank_svr_name);
             }
         }
 
@@ -139,10 +139,11 @@ namespace abelkhan
         public void player_login_rsp(IList<MsgPack.MessagePackObject> inArray){
             var uuid = ((MsgPack.MessagePackObject)inArray[0]).AsUInt64();
             var _info = player_info.protcol_to_player_info(((MsgPack.MessagePackObject)inArray[1]).AsDictionary());
+            var _rank_svr_name = ((MsgPack.MessagePackObject)inArray[2]).AsString();
             var rsp = try_get_and_del_player_login_cb(uuid);
             if (rsp != null)
             {
-                rsp.call_cb(_info);
+                rsp.call_cb(_info, _rank_svr_name);
             }
         }
 
@@ -177,10 +178,11 @@ namespace abelkhan
         public void create_role_rsp(IList<MsgPack.MessagePackObject> inArray){
             var uuid = ((MsgPack.MessagePackObject)inArray[0]).AsUInt64();
             var _info = player_info.protcol_to_player_info(((MsgPack.MessagePackObject)inArray[1]).AsDictionary());
+            var _rank_svr_name = ((MsgPack.MessagePackObject)inArray[2]).AsString();
             var rsp = try_get_and_del_create_role_cb(uuid);
             if (rsp != null)
             {
-                rsp.call_cb(_info);
+                rsp.call_cb(_info, _rank_svr_name);
             }
         }
 
