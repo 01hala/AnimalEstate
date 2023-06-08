@@ -57,11 +57,13 @@ namespace Rank
         {
             if (guidRank.TryGetValue(item.guid, out var old))
             {
-                rankList.RemoveAt(old);
+                rankList.RemoveAt(old - 1);
             }
 
             var score = item.score << 32 | item.guid;
             rankList.Add(score, item);
+            item.rank = rankList.IndexOfKey(score) + 1;
+            guidRank[item.guid] = item.rank;
 
             if (rankList.Count() > (capacity + 200)) {
                 var remove = new List<long>();
@@ -75,7 +77,9 @@ namespace Rank
                 }
             }
 
-            return rankList.IndexOfKey(score);
+            log.log.trace("UpdateRankItem, rank:{0}", item.rank);
+
+            return item.rank;
         }
 
         public int GetRankGuid(long guid)
@@ -95,6 +99,7 @@ namespace Rank
             {
                 rank.Add(rankList.GetValueByIndex(i));
             }
+            log.log.trace("GetRankRange rank:{0}", Newtonsoft.Json.JsonConvert.SerializeObject(rank));
 
             return rank;
         }
@@ -162,11 +167,11 @@ namespace Rank
             return task.Task;
         }
 
-        private static void tick_save_rank(long tick)
+        private static void save_rank()
         {
             try
             {
-                foreach(var rank in rankDict.Values)
+                foreach (var rank in rankDict.Values)
                 {
                     var query = new DBQueryHelper();
                     query.condition("name", rank.name);
@@ -183,10 +188,12 @@ namespace Rank
             {
                 log.log.err($"tick_save_rank ex:{ex}!");
             }
-            finally
-            {
-                hub.hub._timer.addticktime(30 * 60 * 1000, tick_save_rank);
-            }
+        }
+
+        private static void tick_save_rank(long tick)
+        {
+            save_rank();
+            hub.hub._timer.addticktime(30 * 60 * 1000, tick_save_rank);
         }
 
         private static void Rank_svr_Service_Module_on_update_rank_item(string rankNmae, rank_item item)
@@ -268,12 +275,13 @@ namespace Rank
             rank_svr_Service_Module.on_update_rank_item += Rank_svr_Service_Module_on_update_rank_item;
 
             _hub.onCloseServer += () => {
+                save_rank();
                 _hub.closeSvr();
             };
 
-            _hub.onDBProxyInit += () =>
+            _hub.onDBProxyInit += async () =>
             {
-                Init(constant.constant.player_db_name, constant.constant.player_db_rank_collection, _rank_info);
+                await Init(constant.constant.player_db_name, constant.constant.player_db_rank_collection, _rank_info);
             };
 
             log.log.trace("player start ok");

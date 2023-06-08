@@ -330,7 +330,7 @@ namespace player
         {
             foreach (var info in _settle_info.settle_info)
             {
-                if (_info.guid == info.guid)
+                if (_info.guid == info.guid && info.rank == 1)
                 {
                     _info.coin += info.award_coin;
                     _info.score++;
@@ -347,7 +347,7 @@ namespace player
                     };
                     using var st = constant.constant.rcStMgr.GetStream();
                     var _serializer = MessagePackSerializer.Get<player_rank_info>();
-                    _serializer.Pack(st, _player_rank_info);
+                    _serializer.Pack(st, player_rank_info.player_rank_info_to_protcol(_player_rank_info));
                     var rank_item = new rank_item()
                     {
                         guid = _info.guid,

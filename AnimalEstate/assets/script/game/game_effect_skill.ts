@@ -234,8 +234,9 @@ export class main_game_effect_skill extends Component {
         singleton.netSingleton.game.cb_use_skill = this.on_cb_use_skill.bind(this);
         singleton.netSingleton.game.cb_animal_order.push(this.on_cb_animal_order.bind(this));
 
-        if (singleton.netSingleton.game.CurrentPlayerInfo) {
-            this.skill_is_use = singleton.netSingleton.game.CurrentPlayerInfo.skill_is_used;
+        let game_info = singleton.netSingleton.game.get_player_game_info(singleton.netSingleton.login.player_info.guid);
+        if (game_info) {
+            this.skill_is_use = game_info.skill_is_used;
         }
 
         this.on_cb_animal_order();

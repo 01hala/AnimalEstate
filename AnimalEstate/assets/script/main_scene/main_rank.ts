@@ -36,6 +36,7 @@ export class main_rank extends Component {
                 console.log("on_get_rank " + JSON.stringify(rank_info));
 
                 let player_info = msgpack.decode(rank_info.item) as player_rank_info;
+                console.log("player_info:", JSON.stringify(player_info));
                 let _rank_player_frame = instantiate(this.rank_player_frame);
 
                 let rank_label = _rank_player_frame.getChildByName("rank").getComponent(Label);
@@ -50,10 +51,10 @@ export class main_rank extends Component {
                 name_label.string = player_info.name;
 
                 let guid_label = _rank_player_frame.getChildByName("guid").getComponent(Label);
-                guid_label.string = player_info.guid.toString();
+                guid_label.string = rank_info.guid.toString();
 
                 let score_label = _rank_player_frame.getChildByName("score").getComponent(Label);
-                score_label.string = player_info.score.toString();
+                score_label.string = rank_info.score.toString();
 
                 this.view.content.addChild(_rank_player_frame);
                 _rank_player_frame.setPosition(0, -60 - friend_count * 120);
