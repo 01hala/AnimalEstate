@@ -14,6 +14,8 @@ export class main_scene extends Component {
     @property(Label)
     user_name:Label = null;
     @property(Label)
+    guid:Label = null;
+    @property(Label)
     score:Label = null;
 
     @property(Sprite)
@@ -88,7 +90,8 @@ export class main_scene extends Component {
                 this.avatar.spriteFrame = SpriteFrame.createWithImage(img);
             }
         });
-        this.user_name.string = singleton.netSingleton.login.player_info.name.slice(0, 3) + " " + singleton.netSingleton.login.player_info.guid;
+        this.user_name.string = singleton.netSingleton.login.player_info.name.slice(0, 3);
+        this.guid.string = singleton.netSingleton.login.player_info.guid.toString();
         this.score.string = singleton.netSingleton.login.player_info.score.toString();
 
         console.log("init_avatar end!");

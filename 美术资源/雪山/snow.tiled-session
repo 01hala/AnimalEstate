@@ -1,0 +1,75 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "snow.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "D:/AnimalEstate/美术资源/tiledmap/lakeside/background.tmx": {
+            "scale": 0.37940624999999994,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 802.5698047936744,
+                "y": 802.5698047936745
+            }
+        },
+        "D:/AnimalEstate/美术资源/tiledmap/lakeside/background.tmx#地板": {
+            "scaleInDock": 1
+        },
+        "D:/AnimalEstate/美术资源/tiledmap/lakeside/background.tmx#背景": {
+            "scaleInDock": 1
+        },
+        "example.tsx": {
+            "scaleInDock": 0.25
+        },
+        "grid.tsx": {
+            "scaleInDock": 0.25,
+            "scaleInEditor": 1
+        },
+        "snow.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": -19.69696969696963,
+                "y": -171.21212121212125
+            }
+        },
+        "snow_bk.tsx": {
+            "scaleInDock": 0.25,
+            "scaleInEditor": 1
+        },
+        "stairs1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.imagePath": "D:/AnimalEstate/美术资源/雪山",
+    "map.fixedSize": false,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "openFiles": [
+        "snow.tmx",
+        "snow_bk.tsx",
+        "grid.tsx"
+    ],
+    "project": "snow.tiled-project",
+    "recentFiles": [
+        "grid.tsx",
+        "snow_bk.tsx",
+        "snow.tmx",
+        "stairs1.tsx",
+        "D:/AnimalEstate/美术资源/tiledmap/lakeside/background.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}
