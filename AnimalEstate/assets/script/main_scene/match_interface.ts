@@ -63,6 +63,7 @@ export class match_interface extends Component {
             singleton.netSingleton.room.ReInit();
             
             singleton.netSingleton.bundle.loadScene('lakeside_game', function (err, scene) {
+                console.log("lakeside_game loadScene error:", err);
                 director.runScene(scene);
             });
         };

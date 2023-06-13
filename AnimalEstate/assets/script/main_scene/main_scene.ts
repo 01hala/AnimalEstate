@@ -119,8 +119,10 @@ export class main_scene extends Component {
             console.log("Playground:", singleton.netSingleton.game.Playground);
             if (singleton.netSingleton.game.Playground == playground.lakeside){
                 console.log("start game reconnect!");
-                
-                director.runScene(singleton.netSingleton.gameScene);
+                singleton.netSingleton.bundle.loadScene('lakeside_game', function (err, scene) {
+                    console.log("lakeside_game loadScene error:", err);
+                    director.runScene(scene);
+                });
             }
         }
         

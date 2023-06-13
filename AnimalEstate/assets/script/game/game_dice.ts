@@ -12,14 +12,8 @@ import * as game_data_props from './global_game_data/game_props_def';
 
 @ccclass('main_game_dice')
 export class main_game_dice extends Component {
-    @property(Prefab)
-    lake_map:Prefab = null;
-
     @property(Canvas)
     main_canvas:Canvas = null;
-
-    @property(Sprite)
-    bk:Sprite = null;
     @property(Mask)
     mask:Mask = null;
 
@@ -322,12 +316,6 @@ export class main_game_dice extends Component {
 
         if (singleton.netSingleton.game.CurrentPlayerInfo) {
             this.ready_ui.node.active = false;
-        }
-
-        if (singleton.netSingleton.game.Playground == playground.lakeside) {
-            let index = this.mask.node.getSiblingIndex();
-            let lake_map_node = instantiate(this.lake_map);
-            this.bk.node.insertChild(lake_map_node, index); 
         }
         
         console.log("main_game_dice start end!");
