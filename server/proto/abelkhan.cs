@@ -37,9 +37,12 @@ namespace abelkhan
 
         public static void add_timer(UInt64 _tick, Action cb)
         {
-            tick = refresh();
-            var tick_ = tick + _tick;
-            add_timer_list.Add(KeyValuePair.Create(tick_, cb));
+            lock (add_timer_list)
+            {
+                tick = refresh();
+                var tick_ = tick + _tick;
+                add_timer_list.Add(KeyValuePair.Create(tick_, cb));
+            }
         }
         public static void poll()
         {
@@ -47,11 +50,15 @@ namespace abelkhan
 
             lock(timer)
             {
-                foreach (var (tick_, cb) in add_timer_list)
+                lock (add_timer_list)
                 {
-                    var _tick = tick_;
-                    while (timer.ContainsKey(_tick)) { _tick++; }
-                    timer.Add(_tick, cb);
+                    foreach (var (tick_, cb) in add_timer_list)
+                    {
+                        var _tick = tick_;
+                        while (timer.ContainsKey(_tick)) { _tick++; }
+                        timer.Add(_tick, cb);
+                    }
+                    add_timer_list.Clear();
                 }
 
                 var list = new List<UInt64>();
