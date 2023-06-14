@@ -39,12 +39,14 @@ namespace player
                 var target_player = player.client_Mng.guid_get_client_proxy(long.Parse(msg.player_guid));
                 target_player.settle(_settle_info_msg._settle_info);
                 client_mng.PlayerGameClientCaller.get_client(target_player.uuid).settle(_settle_info_msg._settle_info);
-
-                player.offline_Msg_Mng.del_offline_msg(msg.msg_guid);
             }
             catch (System.Exception ex)
             {
                 log.log.err("process_settle_info_msg ex:{0}", ex);
+            }
+            finally
+            {
+                player.offline_Msg_Mng.del_offline_msg(msg.msg_guid);
             }
         }
 

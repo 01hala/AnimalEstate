@@ -83,7 +83,6 @@ export class player_friend_info
     public sdk_uuid : string = "";
     public name : string = "";
     public avatar : string = "";
-    public coin : number = 0;
     public score : number = 0;
 
 }
@@ -107,9 +106,6 @@ export function protcol_to_player_friend_info(_protocol:any){
         else if (key === "avatar"){
             _struct.avatar = val as string;
         }
-        else if (key === "coin"){
-            _struct.coin = val as number;
-        }
         else if (key === "score"){
             _struct.score = val as number;
         }
@@ -123,7 +119,6 @@ export class player_info
     public sdk_uuid : string = "";
     public name : string = "";
     public avatar : string = "";
-    public coin : number = 0;
     public score : number = 0;
     public friend_list : player_friend_info[] = [];
     public invite_list : player_friend_info[] = [];
@@ -153,9 +148,6 @@ export function protcol_to_player_info(_protocol:any){
         }
         else if (key === "avatar"){
             _struct.avatar = val as string;
-        }
-        else if (key === "coin"){
-            _struct.coin = val as number;
         }
         else if (key === "score"){
             _struct.score = val as number;
@@ -212,7 +204,6 @@ export class player_inline_info
     public guid : number = 0;
     public name : string = "";
     public avatar : string = "";
-    public coin : number = 0;
     public score : number = 0;
     public hero_list : animal[] = [];
     public skin_list : skin[] = [];
@@ -239,9 +230,6 @@ export function protcol_to_player_inline_info(_protocol:any){
         }
         else if (key === "avatar"){
             _struct.avatar = val as string;
-        }
-        else if (key === "coin"){
-            _struct.coin = val as number;
         }
         else if (key === "score"){
             _struct.score = val as number;
@@ -496,8 +484,6 @@ export class game_player_settle_info
     public guid : number = 0;
     public name : string = "";
     public rank : number = 0;
-    public award_coin : number = 0;
-    public award_score : number = 0;
 
 }
 
@@ -516,12 +502,6 @@ export function protcol_to_game_player_settle_info(_protocol:any){
         }
         else if (key === "rank"){
             _struct.rank = val as number;
-        }
-        else if (key === "award_coin"){
-            _struct.award_coin = val as number;
-        }
-        else if (key === "award_score"){
-            _struct.award_score = val as number;
         }
     }
     return _struct;
@@ -580,7 +560,6 @@ export class player_rank_info
     public sdk_uuid : string = "";
     public name : string = "";
     public avatar : string = "";
-    public coin : number = 0;
     public score : number = 0;
 
 }
@@ -603,9 +582,6 @@ export function protcol_to_player_rank_info(_protocol:any){
         }
         else if (key === "avatar"){
             _struct.avatar = val as string;
-        }
-        else if (key === "coin"){
-            _struct.coin = val as number;
         }
         else if (key === "score"){
             _struct.score = val as number;

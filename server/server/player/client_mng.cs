@@ -95,7 +95,6 @@ namespace player
                 info.name = _info.name;
                 info.avatar = _info.avatar;
                 info.guid = _info.guid;
-                info.coin = _info.coin;
                 info.score = _info.score;
                 info.hero_list = _info.hero_list;
                 info.skin_list = _info.skin_list;
@@ -214,7 +213,6 @@ namespace player
                 name = nick_name,
                 avatar = avatar_url,
                 guid = await get_guid(),
-                coin = 100,
                 score = 0,
                 friend_list = new List<player_friend_info>(),
                 invite_list = new List<player_friend_info>(),
@@ -332,7 +330,6 @@ namespace player
             {
                 if (_info.guid == info.guid && info.rank == 1)
                 {
-                    _info.coin += info.award_coin;
                     _info.score++;
                     save_role_db_info();
 
@@ -342,7 +339,6 @@ namespace player
                         sdk_uuid = _info.sdk_uuid,
                         name = _info.name,
                         avatar = _info.avatar,
-                        coin = _info.coin,
                         score = _info.score,
                     };
                     using var st = constant.constant.rcStMgr.GetStream();

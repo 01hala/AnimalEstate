@@ -316,8 +316,6 @@ namespace game
                             player_settle_info.rank++;
                         }
                     }
-                    player_settle_info.award_coin = 100 / player_settle_info.rank;
-                    player_settle_info.award_score = 50 / player_settle_info.rank;
                     info.settle_info.Add(player_settle_info);
 
                     if (_client_Proxy.PlayerGameInfo.guid < 0)

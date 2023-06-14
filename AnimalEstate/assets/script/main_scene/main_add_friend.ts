@@ -99,7 +99,6 @@ export class main_add_friend extends Component {
                             self.sdk_uuid = singleton.netSingleton.login.player_info.sdk_uuid;
                             self.name = singleton.netSingleton.login.player_info.name;
                             self.avatar = singleton.netSingleton.login.player_info.avatar;
-                            self.coin = singleton.netSingleton.login.player_info.coin;
                             self.score = singleton.netSingleton.login.player_info.score;
                             singleton.netSingleton.friend.invite_role_friend(self, find_info);
                         }, this);

@@ -103,7 +103,6 @@ struct player_friend_info
 	string sdk_uuid;
 	string name;
 	string avatar;
-	int32 coin;
 	int32 score;
 }
 
@@ -113,7 +112,6 @@ struct player_info
 	string sdk_uuid;
 	string name;
 	string avatar;
-	int32 coin;
 	int32 score;
 	player_friend_info[] friend_list;
     player_friend_info[] invite_list;
@@ -130,7 +128,6 @@ struct player_inline_info
 	int64 guid;
 	string name;
 	string avatar;
-	int32 coin;
 	int32 score;
 	animal[] hero_list;
 	skin[] skin_list;
@@ -193,8 +190,6 @@ struct game_player_settle_info
 	int64 guid;
 	string name;
 	int32 rank;
-	int32 award_coin;
-	int32 award_score;
 }
 
 struct game_settle_info
@@ -213,7 +208,6 @@ struct player_rank_info {
 	string sdk_uuid;
 	string name;
 	string avatar;
-	int32 coin;
 	int32 score;
 }
 

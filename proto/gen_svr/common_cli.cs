@@ -84,7 +84,6 @@ namespace abelkhan
         public string sdk_uuid;
         public string name;
         public string avatar;
-        public Int32 coin;
         public Int32 score;
         public static MsgPack.MessagePackObjectDictionary player_friend_info_to_protcol(player_friend_info _struct){
             var _protocol = new MsgPack.MessagePackObjectDictionary();
@@ -92,7 +91,6 @@ namespace abelkhan
             _protocol.Add("sdk_uuid", _struct.sdk_uuid);
             _protocol.Add("name", _struct.name);
             _protocol.Add("avatar", _struct.avatar);
-            _protocol.Add("coin", _struct.coin);
             _protocol.Add("score", _struct.score);
             return _protocol;
         }
@@ -111,9 +109,6 @@ namespace abelkhan
                 else if (((MsgPack.MessagePackObject)i.Key).AsString() == "avatar"){
                     _struct9b9e8b33_ad4e_3bf3_b537_d892bf5094fa.avatar = ((MsgPack.MessagePackObject)i.Value).AsString();
                 }
-                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "coin"){
-                    _struct9b9e8b33_ad4e_3bf3_b537_d892bf5094fa.coin = ((MsgPack.MessagePackObject)i.Value).AsInt32();
-                }
                 else if (((MsgPack.MessagePackObject)i.Key).AsString() == "score"){
                     _struct9b9e8b33_ad4e_3bf3_b537_d892bf5094fa.score = ((MsgPack.MessagePackObject)i.Value).AsInt32();
                 }
@@ -128,7 +123,6 @@ namespace abelkhan
         public string sdk_uuid;
         public string name;
         public string avatar;
-        public Int32 coin;
         public Int32 score;
         public List<player_friend_info> friend_list;
         public List<player_friend_info> invite_list;
@@ -143,7 +137,6 @@ namespace abelkhan
             _protocol.Add("sdk_uuid", _struct.sdk_uuid);
             _protocol.Add("name", _struct.name);
             _protocol.Add("avatar", _struct.avatar);
-            _protocol.Add("coin", _struct.coin);
             _protocol.Add("score", _struct.score);
             if (_struct.friend_list != null) {
                 var _array_friend_list = new List<MsgPack.MessagePackObject>();
@@ -211,9 +204,6 @@ namespace abelkhan
                 else if (((MsgPack.MessagePackObject)i.Key).AsString() == "avatar"){
                     _structba9db598_9e11_365a_9abc_c16f0f380537.avatar = ((MsgPack.MessagePackObject)i.Value).AsString();
                 }
-                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "coin"){
-                    _structba9db598_9e11_365a_9abc_c16f0f380537.coin = ((MsgPack.MessagePackObject)i.Value).AsInt32();
-                }
                 else if (((MsgPack.MessagePackObject)i.Key).AsString() == "score"){
                     _structba9db598_9e11_365a_9abc_c16f0f380537.score = ((MsgPack.MessagePackObject)i.Value).AsInt32();
                 }
@@ -277,7 +267,6 @@ namespace abelkhan
         public Int64 guid;
         public string name;
         public string avatar;
-        public Int32 coin;
         public Int32 score;
         public List<animal> hero_list;
         public List<skin> skin_list;
@@ -289,7 +278,6 @@ namespace abelkhan
             _protocol.Add("guid", _struct.guid);
             _protocol.Add("name", _struct.name);
             _protocol.Add("avatar", _struct.avatar);
-            _protocol.Add("coin", _struct.coin);
             _protocol.Add("score", _struct.score);
             if (_struct.hero_list != null) {
                 var _array_hero_list = new List<MsgPack.MessagePackObject>();
@@ -335,9 +323,6 @@ namespace abelkhan
                 }
                 else if (((MsgPack.MessagePackObject)i.Key).AsString() == "avatar"){
                     _structcdacc51b_f718_3ebb_ad22_096d86e7efee.avatar = ((MsgPack.MessagePackObject)i.Value).AsString();
-                }
-                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "coin"){
-                    _structcdacc51b_f718_3ebb_ad22_096d86e7efee.coin = ((MsgPack.MessagePackObject)i.Value).AsInt32();
                 }
                 else if (((MsgPack.MessagePackObject)i.Key).AsString() == "score"){
                     _structcdacc51b_f718_3ebb_ad22_096d86e7efee.score = ((MsgPack.MessagePackObject)i.Value).AsInt32();
@@ -640,15 +625,11 @@ namespace abelkhan
         public Int64 guid;
         public string name;
         public Int32 rank;
-        public Int32 award_coin;
-        public Int32 award_score;
         public static MsgPack.MessagePackObjectDictionary game_player_settle_info_to_protcol(game_player_settle_info _struct){
             var _protocol = new MsgPack.MessagePackObjectDictionary();
             _protocol.Add("guid", _struct.guid);
             _protocol.Add("name", _struct.name);
             _protocol.Add("rank", _struct.rank);
-            _protocol.Add("award_coin", _struct.award_coin);
-            _protocol.Add("award_score", _struct.award_score);
             return _protocol;
         }
         public static game_player_settle_info protcol_to_game_player_settle_info(MsgPack.MessagePackObjectDictionary _protocol){
@@ -662,12 +643,6 @@ namespace abelkhan
                 }
                 else if (((MsgPack.MessagePackObject)i.Key).AsString() == "rank"){
                     _structeb1fe0ef_fca5_358c_91c2_45f20a7adbea.rank = ((MsgPack.MessagePackObject)i.Value).AsInt32();
-                }
-                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "award_coin"){
-                    _structeb1fe0ef_fca5_358c_91c2_45f20a7adbea.award_coin = ((MsgPack.MessagePackObject)i.Value).AsInt32();
-                }
-                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "award_score"){
-                    _structeb1fe0ef_fca5_358c_91c2_45f20a7adbea.award_score = ((MsgPack.MessagePackObject)i.Value).AsInt32();
                 }
             }
             return _structeb1fe0ef_fca5_358c_91c2_45f20a7adbea;
@@ -733,7 +708,6 @@ namespace abelkhan
         public string sdk_uuid;
         public string name;
         public string avatar;
-        public Int32 coin;
         public Int32 score;
         public static MsgPack.MessagePackObjectDictionary player_rank_info_to_protcol(player_rank_info _struct){
             var _protocol = new MsgPack.MessagePackObjectDictionary();
@@ -741,7 +715,6 @@ namespace abelkhan
             _protocol.Add("sdk_uuid", _struct.sdk_uuid);
             _protocol.Add("name", _struct.name);
             _protocol.Add("avatar", _struct.avatar);
-            _protocol.Add("coin", _struct.coin);
             _protocol.Add("score", _struct.score);
             return _protocol;
         }
@@ -759,9 +732,6 @@ namespace abelkhan
                 }
                 else if (((MsgPack.MessagePackObject)i.Key).AsString() == "avatar"){
                     _structf51c92c0_ff99_3f1e_b93a_6053f400c8db.avatar = ((MsgPack.MessagePackObject)i.Value).AsString();
-                }
-                else if (((MsgPack.MessagePackObject)i.Key).AsString() == "coin"){
-                    _structf51c92c0_ff99_3f1e_b93a_6053f400c8db.coin = ((MsgPack.MessagePackObject)i.Value).AsInt32();
                 }
                 else if (((MsgPack.MessagePackObject)i.Key).AsString() == "score"){
                     _structf51c92c0_ff99_3f1e_b93a_6053f400c8db.score = ((MsgPack.MessagePackObject)i.Value).AsInt32();

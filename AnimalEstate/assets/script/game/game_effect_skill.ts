@@ -784,7 +784,10 @@ export class main_game_effect_skill extends Component {
     private async on_cb_use_skill(guid:number, animal_index:number, target_guid:number, target_animal_index:number) {
         console.log(`cb_use_skill guid:${guid}, target_guid:${target_guid}, target_animal_index:${target_animal_index}`);
 
-        this.skill_is_use = true;
+        if (guid == singleton.netSingleton.login.player_info.guid) {
+            this.skill_is_use = true;
+        }
+
         let player_game_info = singleton.netSingleton.game.get_player_game_info(guid);
         if (player_game_info.skill_id == skill.phantom_dice) { //幻影骰子
             this.set_phantom_dice(guid);

@@ -244,7 +244,6 @@ namespace player
                                 sdk_uuid = player_info.sdk_uuid,
                                 name = player_info.name,
                                 avatar = player_info.avatar,
-                                coin = player_info.coin,
                                 score = player_info.score
                             };
                             info_list.Add(info);
