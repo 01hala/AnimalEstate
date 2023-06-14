@@ -3,6 +3,7 @@ using hub;
 using log;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MsgPack;
 using MsgPack.Serialization;
 using service;
 using System;
@@ -342,7 +343,7 @@ namespace player
                         score = _info.score,
                     };
                     using var st = constant.constant.rcStMgr.GetStream();
-                    var _serializer = MessagePackSerializer.Get<player_rank_info>();
+                    var _serializer = MessagePackSerializer.Get<MessagePackObjectDictionary>();
                     _serializer.Pack(st, player_rank_info.player_rank_info_to_protcol(_player_rank_info));
                     var rank_item = new rank_item()
                     {
