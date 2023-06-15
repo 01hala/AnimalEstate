@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Sprite, Canvas, Prefab, director, instantiate, Label, ImageAsset, assetManager, Asset, SpriteFrame } from 'cc';
 const { ccclass, property } = _decorator;
 
+import * as cli from '../serverSDK/client_handle';
 import * as singleton from '../netDriver/netSingleton';
 import { playground, player_friend_info } from '../serverSDK/common';
 
@@ -143,8 +144,35 @@ export class main_scene extends Component {
         console.log("check_init_room end!");
     }
 
-    start() {
+    private conn_gate_svr(url:string) {
+        return new Promise<void>(resolve => {
+            cli.cli_handle.connect_gate(url);
+            cli.cli_handle.onGateConnect = () => {
+                resolve();
+            }
+        });
+    }
+
+    async relogin() {
+        await this.conn_gate_svr("wss://animal.ucat.games:3001");
+        return new Promise((resolve, reject)=>{
+            singleton.netSingleton.login.cb_player_login_sucess = () => {
+                console.log("login sucess!");
+                resolve("cb_player_login_sucess");
+            }
+
+            wx.login({
+                success: (login_res) => {
+                    singleton.netSingleton.login.login_player_no_author(login_res.code, singleton.netSingleton.login.nick_name, singleton.netSingleton.login.avatar_url);
+                }
+            });
+        });
+    }
+
+    async start() {
         console.log("main scene start!");
+
+        await this.relogin();
 
         singleton.netSingleton.game.cb_game_info = () => {
             console.log("start match!");
