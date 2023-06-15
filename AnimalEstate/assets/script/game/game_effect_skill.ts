@@ -335,7 +335,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player1_guid;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
                 this.select_player.node.active = false;
@@ -347,7 +346,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player2_guid;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
                 this.select_player.node.active = false;
@@ -359,7 +357,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player3_guid;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
                 this.select_player.node.active = false;
@@ -371,7 +368,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player1_guid;
                 this.target_animal_index = 0;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
@@ -384,7 +380,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player1_guid;
                 this.target_animal_index = 1;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
@@ -397,7 +392,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player1_guid;
                 this.target_animal_index = 2;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
@@ -410,7 +404,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player2_guid;
                 this.target_animal_index = 0;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
@@ -423,7 +416,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player2_guid;
                 this.target_animal_index = 1;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
@@ -436,7 +428,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player2_guid;
                 this.target_animal_index = 2;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
@@ -449,7 +440,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player3_guid;
                 this.target_animal_index = 0;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
@@ -462,7 +452,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player3_guid;
                 this.target_animal_index = 1;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);
@@ -475,7 +464,6 @@ export class main_game_effect_skill extends Component {
         if (!this.skill_is_use) {
             if (this.is_skill) {
                 this.is_skill = false;
-                this.skill_is_use = true;
                 this.target_guid = game_data_def.game_data.player3_guid;
                 this.target_animal_index = 2;
                 singleton.netSingleton.game.use_skill(this.target_guid, this.target_animal_index);

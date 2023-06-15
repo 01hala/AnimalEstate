@@ -35,6 +35,13 @@ namespace player
 
         public void reg_match_proxy(hub.hubproxy _proxy)
         {
+            foreach (var _old in match_proxys)
+            {
+                if (_old.name == _proxy.name)
+                {
+                    match_proxys.Remove(_old);
+                }
+            }
             match_proxys.Add(new match_proxy(_player_match_caller, _proxy));
         }
 

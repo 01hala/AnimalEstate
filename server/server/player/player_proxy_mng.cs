@@ -44,7 +44,7 @@ namespace player
 
         public void reg_player_proxy(hub.hubproxy _proxy)
         {
-            player_proxys.Add(_proxy.name, new player_proxy(_player_player_room_caller, _player_offline_msg_caller, _proxy));
+            player_proxys[_proxy.name] = new player_proxy(_player_player_room_caller, _player_offline_msg_caller, _proxy);
         }
 
         public player_proxy get_player_proxy(string player_hub_name)

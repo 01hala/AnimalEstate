@@ -42,8 +42,12 @@ namespace player
         public void reg_room_proxy(hub.hubproxy _proxy)
         {
             var _room = new room_proxy(_player_room_caller, _proxy);
+            if (room_proxys_dict.Remove(_proxy.name, out var _old_room_proxy))
+            {
+                room_proxys.Remove(_old_room_proxy);
+            }
             room_proxys.Add(_room);
-            room_proxys_dict.Add(_proxy.name, _room);
+            room_proxys_dict[_proxy.name] = _room;
         }
 
         public room_proxy random_room()
