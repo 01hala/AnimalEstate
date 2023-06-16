@@ -2,6 +2,7 @@
 using hub;
 using Microsoft.AspNetCore.DataProtection;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using service;
 using System;
 using System.Collections;
@@ -117,6 +118,8 @@ namespace Rank
 
         public static Task Init(string _dbName, string _dbCollection, List<Tuple<string, int> > ranks)
         {
+            log.log.err("rank init begin!");
+
             var task = new TaskCompletionSource();
 
             dbName = _dbName;
@@ -145,6 +148,7 @@ namespace Rank
                         rank.guidRank.Add(long.Parse(it.Name), it.Value.AsInt32);
                     }
 
+                    log.log.err("rank init name:{0} rank:{1}!", rank.name, JsonConvert.SerializeObject(rank));
                     rankDict.Add(rank.name, rank);
                 }
 
