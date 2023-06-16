@@ -46,7 +46,7 @@ namespace Rank
             var docGuidRank = new BsonDocument();
             foreach(var it in guidRank)
             {
-                docRankList.Add(it.Key.ToString(), it.Value);
+                docGuidRank.Add(it.Key.ToString(), it.Value);
             }
             doc.Add("guidRank", docGuidRank);
 
