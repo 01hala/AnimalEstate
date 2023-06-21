@@ -172,6 +172,7 @@ export class main_scene extends Component {
     async start() {
         console.log("main scene start!");
 
+        this.init_avatar();
         await this.relogin();
 
         singleton.netSingleton.game.cb_game_info = () => {
