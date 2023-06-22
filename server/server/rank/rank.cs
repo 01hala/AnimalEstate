@@ -163,21 +163,6 @@ namespace Rank
                     var rank = new Rank(rankDoc["capacity"].AsInt32);
                     rank.name = rankDoc["name"].AsString;
 
-                    foreach (var it in rankDoc["rankList"].AsBsonDocument)
-                    {
-                        var item = new rank_item();
-                        item.guid = it.Value["guid"].AsInt64;
-                        item.score = it.Value["score"].AsInt64;
-                        item.rank = it.Value["rank"].AsInt32;
-                        item.item = it.Value["item"].AsBsonBinaryData.Bytes;
-                        rank.rankList.Add(long.Parse(it.Name), item);
-                    }
-                    for (var i = 0; i < rank.rankList.Count(); ++i)
-                    {
-                        var item = rank.rankList.GetValueByIndex(i);
-                        item.rank = i + 1;
-                    }
-
                     foreach (var it in rankDoc["guidRank"].AsBsonDocument)
                     {
                         var guid = long.Parse(it.Name);
@@ -186,6 +171,36 @@ namespace Rank
                         {
                             rank.guidRank.Add(guid, r.score);
                         }
+                    }
+
+                    foreach (var it in rankDoc["rankList"].AsBsonDocument)
+                    {
+                        var item = new rank_item();
+                        item.guid = it.Value["guid"].AsInt64;
+                        item.score = it.Value["score"].AsInt64;
+                        item.rank = it.Value["rank"].AsInt32;
+                        item.item = it.Value["item"].AsBsonBinaryData.Bytes;
+                        var score = long.Parse(it.Name);
+                        rank.rankList.Add(score, item);
+
+                        if (!rank.guidRank.TryGetValue(item.guid, out var v) || v < score)
+                        {
+                            rank.guidRank[item.guid] = score;
+                        }
+                    }
+                    for (var i = 0; i < rank.rankList.Count(); ++i)
+                    {
+                        var score = rank.rankList.GetKeyByIndex(i);
+                        var item = rank.rankList.GetValueByIndex(i);
+                        if (rank.guidRank.TryGetValue(item.guid, out var v) && v > score)
+                        {
+                            rank.rankList.Remove(score);
+                        }
+                    }
+                    for (var i = rank.rankList.Count() - 1; i >= 0; --i)
+                    {
+                        var item = rank.rankList.GetValueByIndex(i);
+                        item.rank = i + 1;
                     }
 
                     log.log.err("rank init name:{0} rank:{1}!", rank.name, JsonConvert.SerializeObject(rank));
