@@ -16,7 +16,7 @@ namespace Rank
         internal string name;
         internal int capacity;
         internal SortedVector<long, rank_item> rankList = new();
-        internal SortedDictionary<long, int> guidRank = new ();
+        internal SortedDictionary<long, long> guidRank = new ();
 
         public Rank(int _capacity)
         {
@@ -56,15 +56,15 @@ namespace Rank
 
         public int UpdateRankItem(rank_item item)
         {
-            if (guidRank.TryGetValue(item.guid, out var old))
+            if (guidRank.TryGetValue(item.guid, out var oldScore))
             {
-                rankList.RemoveAt(old - 1);
+                rankList.Remove(oldScore);
             }
 
             var score = item.score << 32 | item.guid;
             rankList.Add(score, item);
             item.rank = rankList.IndexOfKey(score) + 1;
-            guidRank[item.guid] = item.rank;
+            guidRank[item.guid] = score;
 
             if (rankList.Count() > (capacity + 200)) {
                 var remove = new List<long>();
@@ -83,22 +83,52 @@ namespace Rank
             return item.rank;
         }
 
+        public rank_item GetRankItemGuid(long guid)
+        {
+            if (!guidRank.TryGetValue(guid, out var score))
+            {
+                return null;
+            }
+            for (var i = 0; i < rankList.Count(); ++i)
+            {
+                var r = rankList.GetValueByIndex(i);
+                if (r.score == score)
+                {
+                    return r;   
+                }
+            }
+            return null;
+        }
+
         public int GetRankGuid(long guid)
         {
-            if (!guidRank.TryGetValue(guid, out var rank))
+            if (!guidRank.TryGetValue(guid, out var score))
             {
-                rank = -1;
+                return -1;
             }
-            return rank;
+            var rank = 1;
+            for (var i = 0; i < rankList.Count(); ++i)
+            {
+                var s = rankList.GetKeyByIndex(i);
+                if (s == score)
+                {
+                    rank = i + 1;
+                    return rank;
+                }
+            }
+            return -1;
         }
 
         public List<rank_item> GetRankRange(int start, int end)
         {
             var rank = new List<rank_item>();
 
-            for (var i = start; i < end && i < rankList.Count(); ++i)
+            var r = start + 1;
+            for (var i = rankList.Count() - start - 1; i >= rankList.Count() - end && i >= 0; --i)
             {
-                rank.Add(rankList.GetValueByIndex(i));
+                var item = rankList.GetValueByIndex(i);
+                item.rank = r++;
+                rank.Add(item);
             }
             log.log.trace("GetRankRange rank:{0}", Newtonsoft.Json.JsonConvert.SerializeObject(rank));
 
@@ -142,10 +172,20 @@ namespace Rank
                         item.item = it.Value["item"].AsBsonBinaryData.Bytes;
                         rank.rankList.Add(long.Parse(it.Name), item);
                     }
-
-                    foreach(var it in rankDoc["guidRank"].AsBsonDocument)
+                    for (var i = 0; i < rank.rankList.Count(); ++i)
                     {
-                        rank.guidRank.Add(long.Parse(it.Name), it.Value.AsInt32);
+                        var item = rank.rankList.GetValueByIndex(i);
+                        item.rank = i + 1;
+                    }
+
+                    foreach (var it in rankDoc["guidRank"].AsBsonDocument)
+                    {
+                        var guid = long.Parse(it.Name);
+                        var r = rank.GetRankItemGuid(guid);
+                        if (r != null)
+                        {
+                            rank.guidRank.Add(guid, r.score);
+                        }
                     }
 
                     log.log.err("rank init name:{0} rank:{1}!", rank.name, JsonConvert.SerializeObject(rank));
