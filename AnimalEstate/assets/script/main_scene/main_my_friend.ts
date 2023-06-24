@@ -32,7 +32,7 @@ export class main_my_friend extends Component {
                     let _avatar_frame = _avatar.getComponent(Sprite);
                     _avatar_frame.spriteFrame = SpriteFrame.createWithImage(img);
                     _friend_frame.addChild(_avatar_frame.node);
-                    _avatar_frame.node.setPosition(-170, 5);
+                    _avatar_frame.node.setPosition(-190, 5);
                 });
                 
                 let name_node = instantiate(this.num_frame)
@@ -42,7 +42,7 @@ export class main_my_friend extends Component {
                 name.lineHeight = 24;
                 name.string = friend.name;
                 _friend_frame.addChild(name_node);
-                name_node.setPosition(-108, 26);
+                name_node.setPosition(-88, 26);
 
                 let _guid_node = instantiate(this.num_frame);
                 var guid = _guid_node.getChildByName("num").getComponent(Label);
@@ -51,7 +51,7 @@ export class main_my_friend extends Component {
                 guid.lineHeight = 24;
                 guid.string = friend.guid.toString();
                 _friend_frame.addChild(_guid_node);
-                _guid_node.setPosition(-108, -16);
+                _guid_node.setPosition(-88, -16);
 
                 let _score_node = instantiate(this.num_frame);
                 var score = _score_node.getChildByName("num").getComponent(Label);
@@ -60,7 +60,7 @@ export class main_my_friend extends Component {
                 score.lineHeight = 24;
                 score.string = friend.score.toString();
                 _friend_frame.addChild(_score_node);
-                _score_node.setPosition(-12, -16);
+                _score_node.setPosition(8, -16);
 
                 this.view.content.addChild(_friend_frame);
                 _friend_frame.setPosition(0, -100 - friend_count * 129);

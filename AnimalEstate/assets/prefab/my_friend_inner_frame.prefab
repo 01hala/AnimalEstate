@@ -729,11 +729,11 @@
       "__id__": 32
     },
     "friend_frame": {
-      "__uuid__": "88a0de82-cfd6-46d0-a254-7a4751d7296e",
+      "__uuid__": "a8f17b73-350c-4f64-bf84-42f75ca674df",
       "__expectedType__": "cc.Prefab"
     },
     "avatar_frame": {
-      "__uuid__": "796491de-40c1-4959-8db8-70072b944223",
+      "__uuid__": "88a0de82-cfd6-46d0-a254-7a4751d7296e",
       "__expectedType__": "cc.Prefab"
     },
     "num_frame": {
