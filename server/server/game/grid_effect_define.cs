@@ -100,6 +100,7 @@ namespace game
         {
             var check = false;
             var remove_effect_list = new List<effect_info>();
+            var callback = new List<Action>();
             foreach (var _effect_info in effect_list)
             {
                 var _animal = _client.PlayerGameInfo.animal_info[animal_index];
@@ -178,8 +179,11 @@ namespace game
                                 _animal.current_pos = (short)to;
                                 ntf_effect_move(effect.landmine, _client.PlayerGameInfo.guid, _client.PlayerGameInfo.current_animal_index, from, to);
 
-                                check_grid_effect(_client, _client.PlayerGameInfo.current_animal_index, from, _animal.current_pos);
-                                check_grid_prop(_client, _animal);
+                                callback.Add(() =>
+                                {
+                                    check_grid_effect(_client, _client.PlayerGameInfo.current_animal_index, from, _animal.current_pos);
+                                    check_grid_prop(_client, _animal);
+                                });
 
                                 remove_effect_list.Add(_effect_info);
                             }
@@ -194,8 +198,11 @@ namespace game
                                     _animal.current_pos = (short)to;
                                     ntf_effect_move(effect.spring, _client.PlayerGameInfo.guid, _client.PlayerGameInfo.current_animal_index, from, to);
 
-                                    check_grid_effect(_client, _client.PlayerGameInfo.current_animal_index, from, _animal.current_pos);
-                                    check_grid_prop(_client, _animal);
+                                    callback.Add(() =>
+                                    {
+                                        check_grid_effect(_client, _client.PlayerGameInfo.current_animal_index, from, _animal.current_pos);
+                                        check_grid_prop(_client, _animal);
+                                    });
 
                                     remove_effect_list.Add(_effect_info);
                                 }
@@ -232,8 +239,11 @@ namespace game
                                 _animal.current_pos = (short)to;
                                 ntf_effect_move(effect.watermelon_rind, _client.PlayerGameInfo.guid, _client.PlayerGameInfo.current_animal_index, from, to);
 
-                                check_grid_effect(_client, _client.PlayerGameInfo.current_animal_index, from, _animal.current_pos);
-                                check_grid_prop(_client, _animal);
+                                callback.Add(() =>
+                                {
+                                    check_grid_effect(_client, _client.PlayerGameInfo.current_animal_index, from, _animal.current_pos);
+                                    check_grid_prop(_client, _animal);
+                                });
 
                                 remove_effect_list.Add(_effect_info);
                             }
@@ -250,6 +260,10 @@ namespace game
             foreach(var _effect_info in remove_effect_list)
             {
                 effect_list.Remove(_effect_info);
+            }
+            foreach(var cb in callback)
+            {
+                cb.Invoke();
             }
 
             return check;
