@@ -39,111 +39,160 @@ namespace game
 
         private async Task phantom_dice_skill(long target_client_guid, short target_animal_index)
         {
-            skill_Effects.Add(new()
+            try
             {
-                skill_state = enum_skill_state.em_phantom_dice,
-                continued_rounds = 5,
-            });
-            _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+                skill_Effects.Add(new()
+                {
+                    skill_state = enum_skill_state.em_phantom_dice,
+                    continued_rounds = 5,
+                });
+                _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+            }
+            catch(System.Exception ex)
+            {
+                log.log.err("phantom_dice_skill error:{0}", ex);
+            }
 
             await Task.Delay(600);
         }
 
         private async Task thief_reborn(long target_client_guid, short target_animal_index)
         {
-            var target_client = _impl.get_client_proxy(target_client_guid);
-            props_list.AddRange(target_client.props_list);
-            target_client.props_list.Clear();
-
-            if (props_list.Count > 0)
+            try
             {
-                foreach (var animal_state in active_State.animal_play_active_states)
-                {
-                    animal_state.could_use_props = true;
-                    animal_state.use_props_count = (short)(props_list.Count > 3 ? 3 : props_list.Count);
-                }
-            }
+                var target_client = _impl.get_client_proxy(target_client_guid);
+                props_list.AddRange(target_client.props_list);
+                target_client.props_list.Clear();
 
-            _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+                if (props_list.Count > 0)
+                {
+                    foreach (var animal_state in active_State.animal_play_active_states)
+                    {
+                        animal_state.could_use_props = true;
+                        animal_state.use_props_count = (short)(props_list.Count > 3 ? 3 : props_list.Count);
+                    }
+                }
+
+                _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+            }
+            catch (System.Exception ex)
+            {
+                log.log.err("thief_reborn error:{0}", ex);
+            }
 
             await Task.Delay(1900);
         }
 
         private async Task step_lotus(long target_client_guid, short target_animal_index)
         {
-            skill_Effects.Add(new()
+            try
             {
-                skill_state = enum_skill_state.em_step_lotus,
-                continued_rounds = 5,
+                skill_Effects.Add(new()
+                {
+                    skill_state = enum_skill_state.em_step_lotus,
+                    continued_rounds = 5,
 
-                active_animal = PlayerGameInfo.animal_info[PlayerGameInfo.current_animal_index].animal_id
-            });
+                    active_animal = PlayerGameInfo.animal_info[PlayerGameInfo.current_animal_index].animal_id
+                });
 
-            _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+                _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+            }
+            catch (System.Exception ex)
+            {
+                log.log.err("step_lotus error:{0}", ex);
+            }
 
             await Task.Delay(600);
         }
 
         private async Task preemptive_strike(long target_client_guid, short target_animal_index)
         {
-            _impl.ClientProxys.Remove(this);
-            _impl.ClientProxys.Insert(0, this);
-            _impl._current_client_index = 0;
-
-            skill_Effects.Add(new()
+            try
             {
-                skill_state = enum_skill_state.em_preemptive_strike,
-                continued_rounds = int.MaxValue,
-            });
+                _impl.ClientProxys.Remove(this);
+                _impl.ClientProxys.Insert(0, this);
+                _impl._current_client_index = 0;
 
-            _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+                skill_Effects.Add(new()
+                {
+                    skill_state = enum_skill_state.em_preemptive_strike,
+                    continued_rounds = int.MaxValue,
+                });
+
+                _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+            }
+            catch (System.Exception ex)
+            {
+                log.log.err("preemptive_strike error:{0}", ex);
+            }
 
             await Task.Delay(600);
         }
 
         private async Task soul_moving_method(long target_client_guid, short target_animal_index)
         {
-            var target_client = _impl.get_client_proxy(target_client_guid);
-            var src = target_client.PlayerGameInfo.animal_info[target_animal_index];
-            var dest = PlayerGameInfo.animal_info[PlayerGameInfo.current_animal_index];
+            try
+            {
+                var target_client = _impl.get_client_proxy(target_client_guid);
+                var src = target_client.PlayerGameInfo.animal_info[target_animal_index];
+                var dest = PlayerGameInfo.animal_info[PlayerGameInfo.current_animal_index];
 
-            src.current_pos = (short)(src.current_pos < 0 ? 0 : src.current_pos);
-            dest.current_pos = (short)(dest.current_pos < 0 ? 0 : dest.current_pos);
+                src.current_pos = (short)(src.current_pos < 0 ? 0 : src.current_pos);
+                dest.current_pos = (short)(dest.current_pos < 0 ? 0 : dest.current_pos);
 
-            target_client.PlayerGameInfo.animal_info[target_animal_index] = dest;
-            PlayerGameInfo.animal_info[PlayerGameInfo.current_animal_index] = src;
+                target_client.PlayerGameInfo.animal_info[target_animal_index] = dest;
+                PlayerGameInfo.animal_info[PlayerGameInfo.current_animal_index] = src;
 
-            _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+                _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+            }
+            catch (System.Exception ex)
+            {
+                log.log.err("soul_moving_method error:{0}", ex);
+            }
 
             await Task.Delay(2000);
         }
 
         private async Task swap_places(long target_client_guid, short target_animal_index)
         {
-            var target_client = _impl.get_client_proxy(target_client_guid);
-            var src = target_client.PlayerGameInfo.animal_info[target_animal_index];
-            var dest = PlayerGameInfo.animal_info[PlayerGameInfo.current_animal_index];
+            try
+            {
+                var target_client = _impl.get_client_proxy(target_client_guid);
+                var src = target_client.PlayerGameInfo.animal_info[target_animal_index];
+                var dest = PlayerGameInfo.animal_info[PlayerGameInfo.current_animal_index];
 
-            src.current_pos = (short)(src.current_pos < 0 ? 0 : src.current_pos);
-            dest.current_pos = (short)(dest.current_pos < 0 ? 0 : dest.current_pos);
+                src.current_pos = (short)(src.current_pos < 0 ? 0 : src.current_pos);
+                dest.current_pos = (short)(dest.current_pos < 0 ? 0 : dest.current_pos);
 
-            var tmp_pos = src.current_pos;
-            src.current_pos = dest.current_pos;
-            dest.current_pos = tmp_pos;
+                var tmp_pos = src.current_pos;
+                src.current_pos = dest.current_pos;
+                dest.current_pos = tmp_pos;
 
-            _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+                _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+            }
+            catch (System.Exception ex)
+            {
+                log.log.err("swap_places error:{0}", ex);
+            }
 
             await Task.Delay(2500);
         }
 
         private async Task altec_lightwave(long target_client_guid, short target_animal_index)
         {
-            var target_client = _impl.get_client_proxy(target_client_guid);
-            var target_animal = target_client.PlayerGameInfo.animal_info[target_animal_index];
-            target_animal.could_move = false;
-            target_animal.unmovable_rounds = 10;
+            try
+            {
+                var target_client = _impl.get_client_proxy(target_client_guid);
+                var target_animal = target_client.PlayerGameInfo.animal_info[target_animal_index];
+                target_animal.could_move = false;
+                target_animal.unmovable_rounds = 10;
 
-            _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+                _impl.ntf_player_use_skill(_game_info.guid, _game_info.current_animal_index, target_client_guid, target_animal_index);
+            }
+            catch (System.Exception ex)
+            {
+                log.log.err("altec_lightwave error:{0}", ex);
+            }
 
             await Task.Delay(1000);
         }
