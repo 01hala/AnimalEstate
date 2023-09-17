@@ -15,12 +15,19 @@ namespace game
 
         private bool already_has_effect_grid(short pos)
         {
-            foreach (var _effect_info in effect_list)
+            try
             {
-                if (_effect_info.grids.Contains(pos))
+                foreach (var _effect_info in effect_list)
                 {
-                    return true;
+                    if (_effect_info.grids.Contains(pos))
+                    {
+                        return true;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return false;
         }

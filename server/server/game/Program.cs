@@ -38,25 +38,46 @@ namespace game
 
         private static void _hub_on_client_disconnect(string uuid)
         {
-            var _client = _game_mng.get_client_uuid(uuid);
-            if (_client != null)
+            try
             {
-                _client.IsOffline = true;
+                var _client = _game_mng.get_client_uuid(uuid);
+                if (_client != null)
+                {
+                    _client.IsOffline = true;
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
         private static void tick_set_game_svr_info(long tick_time)
         {
-            game._redis_handle.SetData(redis_help.BuildGameSvrInfoCacheKey(hub.hub.name), new svr_info { tick_time = (int)hub.hub.tick, player_num = _game_mng.Count });
+            try
+            {
+                game._redis_handle.SetData(redis_help.BuildGameSvrInfoCacheKey(hub.hub.name), new svr_info { tick_time = (int)hub.hub.tick, player_num = _game_mng.Count });
 
-            hub.hub._timer.addticktime(300000, tick_set_game_svr_info);
+                hub.hub._timer.addticktime(300000, tick_set_game_svr_info);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         private static void on_hubproxy(hub.hubproxy _proxy)
         {
-            if (_proxy.type == "player")
+            try
             {
-                _player_proxy_mng.reg_player_proxy(_proxy);
+                if (_proxy.type == "player")
+                {
+                    _player_proxy_mng.reg_player_proxy(_proxy);
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
     }

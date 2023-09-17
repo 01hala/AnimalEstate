@@ -27,7 +27,14 @@ namespace game
 
         public void settle(game_settle_info settle_info)
         {
-            _game_player_caller.get_hub(_proxy.name).settle(settle_info);
+            try
+            {
+                _game_player_caller.get_hub(_proxy.name).settle(settle_info);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
     }
 
@@ -42,16 +49,31 @@ namespace game
 
         public void reg_player_proxy(hub.hubproxy _proxy)
         {
-            player_proxys[_proxy.name] = new player_proxy(_game_player_caller, _proxy);
+            try
+            {
+                player_proxys[_proxy.name] = new player_proxy(_game_player_caller, _proxy);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public player_proxy get_player(string player_hub_name)
         {
-            if (string.IsNullOrEmpty(player_hub_name))
+            player_proxy proxy = null;
+            try
             {
-                player_hub_name = player_proxys.Keys.ToArray()[RandomHelper.RandomInt(player_proxys.Count)];
+                if (string.IsNullOrEmpty(player_hub_name))
+                {
+                    player_hub_name = player_proxys.Keys.ToArray()[RandomHelper.RandomInt(player_proxys.Count)];
+                }
+                player_proxys.TryGetValue(player_hub_name, out proxy);
             }
-            player_proxys.TryGetValue(player_hub_name, out player_proxy proxy);
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
             return proxy;
         }
     }

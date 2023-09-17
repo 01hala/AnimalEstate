@@ -44,9 +44,16 @@ namespace game
             get
             {
                 var uuids = new List<string>();
-                foreach (var _client in _client_proxys)
+                try
                 {
-                    uuids.Add(_client.uuid);
+                    foreach (var _client in _client_proxys)
+                    {
+                        uuids.Add(_client.uuid);
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    log.log.err(e.Message);
                 }
                 return uuids;
             }
@@ -56,9 +63,16 @@ namespace game
             get
             {
                 var player_game_info_list = new List<player_game_info>();
-                foreach (var _client in _client_proxys)
+                try
                 {
-                    player_game_info_list.Add(_client.PlayerGameInfo);
+                    foreach (var _client in _client_proxys)
+                    {
+                        player_game_info_list.Add(_client.PlayerGameInfo);
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    log.log.err(e.Message);
                 }
                 return player_game_info_list;
             }
@@ -68,12 +82,19 @@ namespace game
             get
             {
                 int count = 0;
-                foreach (var _client in _client_proxys)
+                try
                 {
-                    if (!_client.IsDonePlay)
+                    foreach (var _client in _client_proxys)
                     {
-                        count++;
+                        if (!_client.IsDonePlay)
+                        {
+                            count++;
+                        }
                     }
+                }
+                catch (System.Exception e)
+                {
+                    log.log.err(e.Message);
                 }
                 return count;
             }
@@ -169,40 +190,49 @@ namespace game
             log.log.trace("random_playground begin!");
 
             var random_list = new List<playground>();
-            foreach (var _client in _client_proxys)
+            try
             {
-                foreach (var _playground in _client.PlayerPlaygrounds)
+                foreach (var _client in _client_proxys)
                 {
-                    if (!random_list.Contains(_playground))
+                    foreach (var _playground in _client.PlayerPlaygrounds)
                     {
-                        random_list.Add(_playground);
+                        if (!random_list.Contains(_playground))
+                        {
+                            random_list.Add(_playground);
+                        }
                     }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return random_list[(int)hub.hub.randmon_uint((uint)random_list.Count)];
         }
 
         public game_impl(game_client_caller _caller, playground playground, List<player_inline_info> room_player_list)
         {
-            _game_client_caller = _caller;
-            _playground = playground;
-            
-            foreach (var _player in room_player_list)
+            try
             {
-                var _client = new client_proxy(_player, this);
-                _client_proxys.Add(_client);
-            }
+                _game_client_caller = _caller;
+                _playground = playground;
 
-            var guid = -1;
-            for (var i = room_player_list.Count; i < 4; i++)
-            {
-                var _player_robot = new player_inline_info();
-                _player_robot.uuid = "robot";
-                _player_robot.name = NameHelper.GetNameHelper.GetName();
-                _player_robot.guid = guid--;
-                _player_robot.hero_list = new List<animal> { animal.chicken, animal.monkey, animal.rabbit, animal.duck, animal.mouse, animal.bear, animal.tiger, animal.lion };
-                _player_robot.skin_list = new List<skin> { skin.chicken, skin.monkey, skin.rabbit, skin.duck, skin.mouse, skin.bear, skin.tiger, skin.lion };
-                _player_robot.skill_list = new List<skill> { 
+                foreach (var _player in room_player_list)
+                {
+                    var _client = new client_proxy(_player, this);
+                    _client_proxys.Add(_client);
+                }
+
+                var guid = -1;
+                for (var i = room_player_list.Count; i < 4; i++)
+                {
+                    var _player_robot = new player_inline_info();
+                    _player_robot.uuid = "robot";
+                    _player_robot.name = NameHelper.GetNameHelper.GetName();
+                    _player_robot.guid = guid--;
+                    _player_robot.hero_list = new List<animal> { animal.chicken, animal.monkey, animal.rabbit, animal.duck, animal.mouse, animal.bear, animal.tiger, animal.lion };
+                    _player_robot.skin_list = new List<skin> { skin.chicken, skin.monkey, skin.rabbit, skin.duck, skin.mouse, skin.bear, skin.tiger, skin.lion };
+                    _player_robot.skill_list = new List<skill> {
                     skill.phantom_dice,
                     skill.soul_moving_method,
                     skill.thief_reborn,
@@ -211,47 +241,73 @@ namespace game
                     skill.swap_places,
                     skill.altec_lightwave
                 };
-                _player_robot.playground_list = new List<playground> { playground.lakeside/*, playground.grassland, playground.hill, playground.snow, playground.desert*/ };
-                var _client = new client_proxy(_player_robot, this);
-                _client_proxys.Add(_client);
-                _client.set_ready();
-                _client.set_auto_active(true);
-                _client.IsOffline = true;
-            }
+                    _player_robot.playground_list = new List<playground> { playground.lakeside/*, playground.grassland, playground.hill, playground.snow, playground.desert*/ };
+                    var _client = new client_proxy(_player_robot, this);
+                    _client_proxys.Add(_client);
+                    _client.set_ready();
+                    _client.set_auto_active(true);
+                    _client.IsOffline = true;
+                }
 
-            if (_playground == playground.random)
+                if (_playground == playground.random)
+                {
+                    _playground = random_playground();
+                }
+
+                _current_client_index = 0;
+
+                hub.hub._timer.addticktime(1500, tick);
+            }
+            catch (System.Exception e)
             {
-                _playground = random_playground();
+                log.log.err(e.Message);
             }
-
-            _current_client_index = 0;
-
-            hub.hub._timer.addticktime(1500, tick);
         }
 
         public void ntf_game_wait_start_info()
         {
-            foreach(var _client in _client_proxys)
+            try
             {
-                _game_client_caller.get_multicast(new List<string>() { _client.uuid }).game_wait_start_info((int)Countdown, Playground, PlayerGameInfo, _client.PlayerInlineInfo);
+                foreach (var _client in _client_proxys)
+                {
+                    _game_client_caller.get_multicast(new List<string>() { _client.uuid }).game_wait_start_info((int)Countdown, Playground, PlayerGameInfo, _client.PlayerInlineInfo);
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
         public void ntf_animal_order(long guid)
         {
-            var _player = get_client_proxy(guid);
-            _game_client_caller.get_multicast(ClientUUIDS).animal_order(guid, _player.PlayerGameInfo.animal_info, _player.PlayerGameInfo.skill_id);
+            try
+            {
+                var _player = get_client_proxy(guid);
+                _game_client_caller.get_multicast(ClientUUIDS).animal_order(guid, _player.PlayerGameInfo.animal_info, _player.PlayerGameInfo.skill_id);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public async Task check_pick_up(client_proxy _client, animal_game_info _animal, short animal_index, int _from, int _to)
         {
-            if (check_grid_effect(_client, animal_index, _from, _to))
+            try
             {
-                await Task.Delay(constant.stepped_effect_delay);
+                if (check_grid_effect(_client, animal_index, _from, _to))
+                {
+                    await Task.Delay(constant.stepped_effect_delay);
+                }
+                if (check_grid_prop(_client, _animal))
+                {
+                    await Task.Delay(constant.stepped_effect_delay);
+                }
             }
-            if (check_grid_prop(_client, _animal))
+            catch (System.Exception e)
             {
-                await Task.Delay(constant.stepped_effect_delay);
+                log.log.err(e.Message);
             }
         }
 
@@ -259,34 +315,48 @@ namespace game
         {
             log.log.trace("check_all_ready begin!");
 
-            foreach (var _client_Proxy in _client_proxys)
+            try
             {
-                if (!_client_Proxy.IsReady)
+                foreach (var _client_Proxy in _client_proxys)
                 {
-                    return false;
+                    if (!_client_Proxy.IsReady)
+                    {
+                        return false;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return true;
         }
 
         public async Task del_player_game_cache(client_proxy _client_Proxy)
         {
-            var token = $"lock_{_client_Proxy.PlayerGameInfo.guid}";
-            var lock_key = redis_help.BuildPlayerGameCacheLockKey(_client_Proxy.PlayerGameInfo.guid);
             try
             {
-                await game._redis_handle.Lock(lock_key, token, 1000);
-
-                var player_game_key = redis_help.BuildPlayerGameCacheKey(_client_Proxy.PlayerGameInfo.guid);
-                var game_hub_name = await game._redis_handle.GetStrData(player_game_key);
-                if (game_hub_name == hub.hub.name)
+                var token = $"lock_{_client_Proxy.PlayerGameInfo.guid}";
+                var lock_key = redis_help.BuildPlayerGameCacheLockKey(_client_Proxy.PlayerGameInfo.guid);
+                try
                 {
-                    game._redis_handle.DelData(player_game_key);
+                    await game._redis_handle.Lock(lock_key, token, 1000);
+
+                    var player_game_key = redis_help.BuildPlayerGameCacheKey(_client_Proxy.PlayerGameInfo.guid);
+                    var game_hub_name = await game._redis_handle.GetStrData(player_game_key);
+                    if (game_hub_name == hub.hub.name)
+                    {
+                        game._redis_handle.DelData(player_game_key);
+                    }
+                }
+                finally
+                {
+                    await game._redis_handle.UnLock(lock_key, token);
                 }
             }
-            finally
+            catch (System.Exception e)
             {
-                await game._redis_handle.UnLock(lock_key, token);
+                log.log.err(e.Message);
             }
         }
 
@@ -294,80 +364,129 @@ namespace game
         {
             log.log.trace("check_done_play begin!");
 
-            if (DonePlayClient != null)
+            try
             {
-                is_done_play = true;
-                game._game_mng.done_game(this);
-
-                var info = new game_settle_info();
-                info.settle_info = new List<game_player_settle_info>();
-
-                var player_hub_list = new List<string>();
-                foreach (var _client_Proxy in _client_proxys)
+                if (DonePlayClient != null)
                 {
-                    var player_settle_info = new game_player_settle_info();
-                    player_settle_info.guid = _client_Proxy.PlayerGameInfo.guid;
-                    player_settle_info.name = _client_Proxy.PlayerGameInfo.name;
-                    player_settle_info.rank = 1;
-                    foreach (var _client_rank in _client_proxys)
+                    is_done_play = true;
+                    game._game_mng.done_game(this);
+
+                    var info = new game_settle_info();
+                    info.settle_info = new List<game_player_settle_info>();
+
+                    var player_hub_list = new List<string>();
+                    foreach (var _client_Proxy in _client_proxys)
                     {
-                        if (_client_Proxy.PlayScore < _client_rank.PlayScore)
+                        var player_settle_info = new game_player_settle_info();
+                        player_settle_info.guid = _client_Proxy.PlayerGameInfo.guid;
+                        player_settle_info.name = _client_Proxy.PlayerGameInfo.name;
+                        player_settle_info.rank = 1;
+                        foreach (var _client_rank in _client_proxys)
                         {
-                            player_settle_info.rank++;
+                            if (_client_Proxy.PlayScore < _client_rank.PlayScore)
+                            {
+                                player_settle_info.rank++;
+                            }
                         }
-                    }
-                    info.settle_info.Add(player_settle_info);
+                        info.settle_info.Add(player_settle_info);
 
-                    if (_client_Proxy.PlayerGameInfo.guid < 0)
+                        if (_client_Proxy.PlayerGameInfo.guid < 0)
+                        {
+                            continue;
+                        }
+
+                        var player_svr_key = redis_help.BuildPlayerGuidCacheKey(_client_Proxy.PlayerGameInfo.guid);
+                        string player_hub_name = await game._redis_handle.GetStrData(player_svr_key);
+                        if (!player_hub_list.Contains(player_hub_name))
+                        {
+                            player_hub_list.Add(player_hub_name);
+                        }
+
+                        await del_player_game_cache(_client_Proxy);
+                    }
+
+                    foreach (var palyer_hub_name in player_hub_list)
                     {
-                        continue;
+                        game._player_proxy_mng.get_player(palyer_hub_name).settle(info);
                     }
-
-                    var player_svr_key = redis_help.BuildPlayerGuidCacheKey(_client_Proxy.PlayerGameInfo.guid);
-                    string player_hub_name = await game._redis_handle.GetStrData(player_svr_key);
-                    if (!player_hub_list.Contains(player_hub_name))
-                    {
-                        player_hub_list.Add(player_hub_name);
-                    }
-
-                    await del_player_game_cache(_client_Proxy);
                 }
-
-                foreach (var palyer_hub_name in player_hub_list)
-                {
-                    game._player_proxy_mng.get_player(palyer_hub_name).settle(info);
-                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
         public void ntf_player_use_skill(long guid, short animal_index, long target_client_guid, short target_animal_index)
         {
-            _game_client_caller.get_multicast(ClientUUIDS).use_skill(guid, animal_index, target_client_guid, target_animal_index);
+            try
+            {
+                _game_client_caller.get_multicast(ClientUUIDS).use_skill(guid, animal_index, target_client_guid, target_animal_index);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public void ntf_player_use_props(props props_id, long guid, short animal_index, long target_client_guid, short target_animal_index)
         {
-            _game_client_caller.get_multicast(ClientUUIDS).use_props(props_id, guid, animal_index, target_client_guid, target_animal_index);
+            try
+            {
+                _game_client_caller.get_multicast(ClientUUIDS).use_props(props_id, guid, animal_index, target_client_guid, target_animal_index);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public void ntf_add_props(enum_add_props_type add_type, long guid, props props_id)
         {
-            _game_client_caller.get_multicast(ClientUUIDS).add_props(add_type, guid, props_id);
+            try
+            {
+                _game_client_caller.get_multicast(ClientUUIDS).add_props(add_type, guid, props_id);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public void ntf_reverse_props(long src_guid, long guid, short animal_index, props props_id, long target_guid, short target_animal_index)
         {
-            _game_client_caller.get_multicast(ClientUUIDS).reverse_props(src_guid, guid, animal_index, props_id, target_guid, target_animal_index);
+            try
+            {
+                _game_client_caller.get_multicast(ClientUUIDS).reverse_props(src_guid, guid, animal_index, props_id, target_guid, target_animal_index);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public void ntf_immunity_props(long guid, props props_id, long target_client_guid, short target_animal_index)
         {
-            _game_client_caller.get_multicast(ClientUUIDS).immunity_props(guid, props_id, target_client_guid, target_animal_index);
+            try
+            {
+                _game_client_caller.get_multicast(ClientUUIDS).immunity_props(guid, props_id, target_client_guid, target_animal_index);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public void ntf_effect_move(effect effect_id, long guid, Int16 target_animal_index, Int32 from, Int32 to)
         {
-            _game_client_caller.get_multicast(ClientUUIDS).effect_move(effect_id, guid, target_animal_index, from, to);
+            try
+            {
+                _game_client_caller.get_multicast(ClientUUIDS).effect_move(effect_id, guid, target_animal_index, from, to);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         private int least_animal_pos()
@@ -375,15 +494,22 @@ namespace game
             log.log.trace("least_animal_pos begin!");
 
             var pos = PlayergroundLenght - 1;
-            foreach (var client_proxy in _client_proxys)
+            try
             {
-                foreach(var animal in client_proxy.PlayerGameInfo.animal_info)
+                foreach (var client_proxy in _client_proxys)
                 {
-                    if (animal.current_pos > 0)
+                    foreach (var animal in client_proxy.PlayerGameInfo.animal_info)
                     {
-                        pos = pos > animal.current_pos ? animal.current_pos : pos;
+                        if (animal.current_pos > 0)
+                        {
+                            pos = pos > animal.current_pos ? animal.current_pos : pos;
+                        }
                     }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return pos;
         }
@@ -393,12 +519,19 @@ namespace game
             log.log.trace("farthest_animal_pos begin!");
 
             var pos = 0;
-            foreach (var client_proxy in _client_proxys)
+            try
             {
-                foreach (var animal in client_proxy.PlayerGameInfo.animal_info)
+                foreach (var client_proxy in _client_proxys)
                 {
-                    pos = pos < animal.current_pos ? animal.current_pos : pos;
+                    foreach (var animal in client_proxy.PlayerGameInfo.animal_info)
+                    {
+                        pos = pos < animal.current_pos ? animal.current_pos : pos;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return pos;
         }
@@ -407,12 +540,19 @@ namespace game
         {
             log.log.trace("get_client_proxy begin!");
 
-            foreach (var client_proxy in _client_proxys)
+            try
             {
-                if (client_proxy.PlayerGameInfo.guid == guid)
+                foreach (var client_proxy in _client_proxys)
                 {
-                    return client_proxy;
+                    if (client_proxy.PlayerGameInfo.guid == guid)
+                    {
+                        return client_proxy;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return null;
         }
@@ -421,11 +561,18 @@ namespace game
         {
             log.log.trace("turn_player_round begin!");
 
-            if (!already_turn_player_round)
+            try
             {
-                _game_client_caller.get_multicast(ClientUUIDS).turn_player_round(_client.PlayerGameInfo.guid, _client.ActiveState, _client.PlayerGameInfo.current_animal_index, game_rounds);
-                already_turn_player_round = true;
-                await Task.Delay(constant.wait_relay_animal);
+                if (!already_turn_player_round)
+                {
+                    _game_client_caller.get_multicast(ClientUUIDS).turn_player_round(_client.PlayerGameInfo.guid, _client.ActiveState, _client.PlayerGameInfo.current_animal_index, game_rounds);
+                    already_turn_player_round = true;
+                    await Task.Delay(constant.wait_relay_animal);
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
@@ -433,44 +580,51 @@ namespace game
         {
             log.log.trace("next_player begin!");
 
-            if (IsDonePlay)
+            try
             {
-                return;
-            }
-
-            turn_next_player = false;
-            for (int count = 0; count < 5; ++count)
-            {
-                ++_current_client_index;
-                if (_current_client_index >= 4)
+                if (IsDonePlay)
                 {
-                    _current_client_index = 0;
+                    return;
                 }
 
-                var _round_client = _client_proxys[_current_client_index];
-                if (!_round_client.IsDonePlay)
+                turn_next_player = false;
+                for (int count = 0; count < 5; ++count)
                 {
-                    _round_client.WaitActiveTime = service.timerservice.Tick;
-                    _round_client.summary_skill_effect();
-                    _round_client.iterater_skill_effect();
-                    
-                    if (_round_client.CouldMove)
+                    ++_current_client_index;
+                    if (_current_client_index >= 4)
                     {
-                        if (_round_client.PlayerGameInfo.current_animal_index >= 0)
+                        _current_client_index = 0;
+                    }
+
+                    var _round_client = _client_proxys[_current_client_index];
+                    if (!_round_client.IsDonePlay)
+                    {
+                        _round_client.WaitActiveTime = service.timerservice.Tick;
+                        _round_client.summary_skill_effect();
+                        _round_client.iterater_skill_effect();
+
+                        if (_round_client.CouldMove)
                         {
-                            GameClientCaller.get_multicast(ClientUUIDS).relay(_round_client.PlayerGameInfo.guid, _round_client.PlayerGameInfo.current_animal_index, true);
-                        }
+                            if (_round_client.PlayerGameInfo.current_animal_index >= 0)
+                            {
+                                GameClientCaller.get_multicast(ClientUUIDS).relay(_round_client.PlayerGameInfo.guid, _round_client.PlayerGameInfo.current_animal_index, true);
+                            }
 
-                        already_turn_player_round = false;
-                        await turn_player_round(_round_client);
-                        break;
-                    }
-                    else
-                    {
-                        _round_client.check_end_round();
-                        _game_client_caller.get_multicast(ClientUUIDS).can_not_active_this_round(_round_client.PlayerGameInfo.guid);
+                            already_turn_player_round = false;
+                            await turn_player_round(_round_client);
+                            break;
+                        }
+                        else
+                        {
+                            _round_client.check_end_round();
+                            _game_client_caller.get_multicast(ClientUUIDS).can_not_active_this_round(_round_client.PlayerGameInfo.guid);
+                        }
                     }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
@@ -483,28 +637,35 @@ namespace game
         {
             log.log.trace("player_use_skill begin!");
 
-            var _current_client = _client_proxys[_current_client_index];
-            if (_client.PlayerGameInfo.guid == _current_client.PlayerGameInfo.guid)
+            try
             {
-                if (wait_skill)
+                var _current_client = _client_proxys[_current_client_index];
+                if (_client.PlayerGameInfo.guid == _current_client.PlayerGameInfo.guid)
                 {
-                    return;
-                }
+                    if (wait_skill)
+                    {
+                        return;
+                    }
 
-                await _client.use_skill(target_client_guid, target_animal_index);
-                if (_client.check_end_round())
-                {
-                    wait_next_player();
+                    await _client.use_skill(target_client_guid, target_animal_index);
+                    if (_client.check_end_round())
+                    {
+                        wait_next_player();
+                    }
+                    else
+                    {
+                        _client.WaitActiveTime = service.timerservice.Tick;
+                        already_turn_player_round = false;
+                    }
                 }
                 else
                 {
-                    _client.WaitActiveTime = service.timerservice.Tick;
-                    already_turn_player_round = false;
+                    log.log.warn($"use_skill not client:{_client.PlayerGameInfo.guid} round active!");
                 }
             }
-            else
+            catch (System.Exception e)
             {
-                log.log.warn($"use_skill not client:{_client.PlayerGameInfo.guid} round active!");
+                log.log.err(e.Message);
             }
         }
 
@@ -512,28 +673,35 @@ namespace game
         {
             log.log.trace("player_use_props begin!");
 
-            var _current_client = _client_proxys[_current_client_index];
-            if (_client.PlayerGameInfo.guid == _current_client.PlayerGameInfo.guid)
+            try
             {
-                if (wait_prop)
+                var _current_client = _client_proxys[_current_client_index];
+                if (_client.PlayerGameInfo.guid == _current_client.PlayerGameInfo.guid)
                 {
-                    return;
-                }
+                    if (wait_prop)
+                    {
+                        return;
+                    }
 
-                await _client.use_props(_props_id, target_client_guid, target_animal_index);
-                if (_client.check_end_round())
-                {
-                    wait_next_player();
+                    await _client.use_props(_props_id, target_client_guid, target_animal_index);
+                    if (_client.check_end_round())
+                    {
+                        wait_next_player();
+                    }
+                    else
+                    {
+                        _client.WaitActiveTime = service.timerservice.Tick;
+                        already_turn_player_round = false;
+                    }
                 }
                 else
                 {
-                    _client.WaitActiveTime = service.timerservice.Tick;
-                    already_turn_player_round = false;
+                    log.log.warn($"use_props not client:{_client.PlayerGameInfo.guid} round active!");
                 }
             }
-            else
+            catch (System.Exception e)
             {
-                log.log.warn($"use_props not client:{_client.PlayerGameInfo.guid} round active!");
+                log.log.err(e.Message);
             }
         }
 
@@ -541,28 +709,35 @@ namespace game
         {
             log.log.trace("player_throw_dice begin!");
 
-            var _current_client = _client_proxys[_current_client_index];
-            if (_client.PlayerGameInfo.guid == _current_client.PlayerGameInfo.guid)
+            try
             {
-                if (wait_dice)
+                var _current_client = _client_proxys[_current_client_index];
+                if (_client.PlayerGameInfo.guid == _current_client.PlayerGameInfo.guid)
                 {
-                    return;
-                }
+                    if (wait_dice)
+                    {
+                        return;
+                    }
 
-                await _client.throw_dice();
-                if (_client.check_end_round())
-                {
-                    wait_next_player();
+                    await _client.throw_dice();
+                    if (_client.check_end_round())
+                    {
+                        wait_next_player();
+                    }
+                    else
+                    {
+                        _client.WaitActiveTime = service.timerservice.Tick;
+                        already_turn_player_round = false;
+                    }
                 }
                 else
                 {
-                    _client.WaitActiveTime = service.timerservice.Tick;
-                    already_turn_player_round = false;
+                    log.log.warn($"throw_dice not client:{_client.PlayerGameInfo.guid} round active!");
                 }
             }
-            else
+            catch (System.Exception e)
             {
-                log.log.warn($"throw_dice not client:{_client.PlayerGameInfo.guid} round active!");
+                log.log.err(e.Message);
             }
         }
 
@@ -570,26 +745,33 @@ namespace game
         {
             log.log.trace("check_effect_due begin!");
 
-            var _due_effect_list = new List<effect_info>();
-            foreach (var _effect in effect_list)
+            try
             {
-                _effect.continued_rounds--;
-                if (_effect.continued_rounds <= 0)
+                var _due_effect_list = new List<effect_info>();
+                foreach (var _effect in effect_list)
                 {
-                    _due_effect_list.Add(_effect);
+                    _effect.continued_rounds--;
+                    if (_effect.continued_rounds <= 0)
+                    {
+                        _due_effect_list.Add(_effect);
+                    }
+                }
+                foreach (var _due_effect in _due_effect_list)
+                {
+                    effect_list.Remove(_due_effect);
+                    if (_due_effect.effect_id == effect.muddy)
+                    {
+                        GameClientCaller.get_multicast(ClientUUIDS).remove_muddy(_due_effect.grids);
+                    }
+                    else
+                    {
+                        GameClientCaller.get_multicast(ClientUUIDS).remove_effect(_due_effect.grids[0]);
+                    }
                 }
             }
-            foreach (var _due_effect in _due_effect_list)
+            catch (System.Exception e)
             {
-                effect_list.Remove(_due_effect);
-                if (_due_effect.effect_id == effect.muddy)
-                {
-                    GameClientCaller.get_multicast(ClientUUIDS).remove_muddy(_due_effect.grids);
-                }
-                else
-                {
-                    GameClientCaller.get_multicast(ClientUUIDS).remove_effect(_due_effect.grids[0]);
-                }
+                log.log.err(e.Message);
             }
         }
 
@@ -597,57 +779,71 @@ namespace game
         {
             log.log.trace("check_prop_due begin!");
 
-            var _due_propt_list = new List<prop_info>();
-            foreach (var _propt in prop_list)
+            try
             {
-                _propt.continued_rounds--;
-                if (_propt.continued_rounds <= 0)
+                var _due_propt_list = new List<prop_info>();
+                foreach (var _propt in prop_list)
                 {
-                    _due_propt_list.Add(_propt);
+                    _propt.continued_rounds--;
+                    if (_propt.continued_rounds <= 0)
+                    {
+                        _due_propt_list.Add(_propt);
+                    }
+                }
+                foreach (var _due_propt in _due_propt_list)
+                {
+                    prop_list.Remove(_due_propt);
+                    GameClientCaller.get_multicast(ClientUUIDS).remove_prop(_due_propt.grid);
                 }
             }
-            foreach (var _due_propt in _due_propt_list)
+            catch (System.Exception e)
             {
-                prop_list.Remove(_due_propt);
-                GameClientCaller.get_multicast(ClientUUIDS).remove_prop(_due_propt.grid);
+                log.log.err(e.Message);
             }
         }
 
         private async Task<bool> check_ready_play()
         {
-            if (!is_all_ready)
+            try
             {
-                if (check_all_ready())
+                if (!is_all_ready)
                 {
-                    is_all_ready = true;
-                }
-                else
-                {
-                    if (wait_ready_time < service.timerservice.Tick)
+                    if (check_all_ready())
                     {
-                        foreach (var _client_Proxy in _client_proxys)
-                        {
-                            if (!_client_Proxy.IsReady)
-                            {
-                                _client_Proxy.set_ready();
-                                _client_Proxy.set_auto_active(true);
-                            }
-                        }
                         is_all_ready = true;
                     }
                     else
                     {
-                        return false;
+                        if (wait_ready_time < service.timerservice.Tick)
+                        {
+                            foreach (var _client_Proxy in _client_proxys)
+                            {
+                                if (!_client_Proxy.IsReady)
+                                {
+                                    _client_Proxy.set_ready();
+                                    _client_Proxy.set_auto_active(true);
+                                }
+                            }
+                            is_all_ready = true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (is_all_ready)
+                    {
+                        var _round_client = _client_proxys[_current_client_index];
+                        _round_client.summary_skill_effect();
+                        _round_client.iterater_skill_effect();
+                        await turn_player_round(_round_client);
                     }
                 }
-
-                if (is_all_ready)
-                {
-                    var _round_client = _client_proxys[_current_client_index];
-                    _round_client.summary_skill_effect();
-                    _round_client.iterater_skill_effect();
-                    await turn_player_round(_round_client);
-                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
 
             return is_all_ready;

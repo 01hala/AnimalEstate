@@ -141,24 +141,31 @@ namespace game
         {
             get
             {
-                if (active_State.could_use_skill)
+                try
                 {
-                    log.log.trace("could_use_skill");
-                    return true;
-                }
-
-                if (active_State.animal_play_active_states == null)
-                {
-                    return false;
-                }
-
-                foreach (var animal_state in active_State.animal_play_active_states)
-                {
-                    if (animal_state.could_use_props || animal_state.could_throw_dice)
+                    if (active_State.could_use_skill)
                     {
-                        log.log.trace("could_use_props || animal_state.could_throw_dice");
+                        log.log.trace("could_use_skill");
                         return true;
                     }
+
+                    if (active_State.animal_play_active_states == null)
+                    {
+                        return false;
+                    }
+
+                    foreach (var animal_state in active_State.animal_play_active_states)
+                    {
+                        if (animal_state.could_use_props || animal_state.could_throw_dice)
+                        {
+                            log.log.trace("could_use_props || animal_state.could_throw_dice");
+                            return true;
+                        }
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    log.log.err(e.Message);
                 }
 
                 return false;
@@ -169,17 +176,24 @@ namespace game
         {
             get
             {
-                if (active_State.animal_play_active_states == null)
+                try
                 {
-                    return false;
-                }
-
-                foreach (var animal_state in active_State.animal_play_active_states)
-                {
-                    if (animal_state.could_use_props)
+                    if (active_State.animal_play_active_states == null)
                     {
-                        return true;
+                        return false;
                     }
+
+                    foreach (var animal_state in active_State.animal_play_active_states)
+                    {
+                        if (animal_state.could_use_props)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    log.log.err(e.Message);
                 }
 
                 return false;
@@ -190,17 +204,24 @@ namespace game
         {
             get
             {
-                if (active_State.animal_play_active_states == null)
+                try
                 {
-                    return false;
-                }
-
-                foreach (var animal_state in active_State.animal_play_active_states)
-                {
-                    if (animal_state.could_throw_dice)
+                    if (active_State.animal_play_active_states == null)
                     {
-                        return true;
+                        return false;
                     }
+
+                    foreach (var animal_state in active_State.animal_play_active_states)
+                    {
+                        if (animal_state.could_throw_dice)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    log.log.err(e.Message);
                 }
 
                 return false;
@@ -224,16 +245,25 @@ namespace game
         {
             get
             {
-                int score = 0;
-                foreach (var _animal in PlayerGameInfo.animal_info)
+                try
                 {
-                    score += _animal.current_pos;
+                    int score = 0;
+                    foreach (var _animal in PlayerGameInfo.animal_info)
+                    {
+                        score += _animal.current_pos;
+                    }
+                    if (this == _impl.DonePlayClient)
+                    {
+                        score += 300;
+                    }
+                    return score;
                 }
-                if (this == _impl.DonePlayClient)
+                catch (System.Exception e)
                 {
-                    score += 300;
+                    log.log.err(e.Message);
                 }
-                return score;
+
+                return 0;
             }
         }
 
@@ -275,35 +305,42 @@ namespace game
 
         public client_proxy(player_inline_info info, game_impl impl)
         {
-            init_skill_list();
-            init_props_callback_list();
-
-            _info = info;
-            _impl = impl;
-
-            _game_info = new()
+            try
             {
-                uuid = _info.uuid,
-                guid = _info.guid,
-                name = _info.name,
-                skill_id = 0,
-                skill_is_used = false,
-                current_animal_index = 0,
-                animal_info = new()
-            };
+                init_skill_list();
+                init_props_callback_list();
 
-            if (_info.skill_list.Count > 0)
-            {
-                _game_info.skill_id = _info.skill_list[(int)hub.hub.randmon_uint((uint)_info.skill_list.Count)];
+                _info = info;
+                _impl = impl;
+
+                _game_info = new()
+                {
+                    uuid = _info.uuid,
+                    guid = _info.guid,
+                    name = _info.name,
+                    skill_id = 0,
+                    skill_is_used = false,
+                    current_animal_index = 0,
+                    animal_info = new()
+                };
+
+                if (_info.skill_list.Count > 0)
+                {
+                    _game_info.skill_id = _info.skill_list[(int)hub.hub.randmon_uint((uint)_info.skill_list.Count)];
+                }
+
+                var animal_list = new List<animal>(_info.hero_list);
+                for (var i = 0; i < 3; i++)
+                {
+                    var _animal_id = animal_list[(int)hub.hub.randmon_uint((uint)animal_list.Count)];
+                    var _skin_id = (skin)((int)_animal_id * 100 + 1);
+                    _game_info.animal_info.Add(new animal_game_info() { animal_id = _animal_id, skin_id = _skin_id, current_pos = -1 });
+                    animal_list.Remove(_animal_id);
+                }
             }
-
-            var animal_list = new List<animal>(_info.hero_list);
-            for (var i = 0; i < 3; i++)
+            catch (System.Exception e)
             {
-                var _animal_id = animal_list[(int)hub.hub.randmon_uint((uint)animal_list.Count)];
-                var _skin_id = (skin)((int)_animal_id * 100 + 1);
-                _game_info.animal_info.Add(new animal_game_info() { animal_id = _animal_id, skin_id = _skin_id, current_pos = -1 });
-                animal_list.Remove(_animal_id);
+                log.log.err(e.Message);
             }
         }
 
@@ -314,205 +351,289 @@ namespace game
 
         private bool reverse_props()
         {
-            foreach (var _props in props_list)
+            try
             {
-                if (_props == props.turtle_shell)
+                foreach (var _props in props_list)
                 {
-                    props_list.Remove(_props);
-                    return true;
+                    if (_props == props.turtle_shell)
+                    {
+                        props_list.Remove(_props);
+                        return true;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return false;
         }
 
         private bool immunity_props()
         {
-            foreach (var effect in skill_Effects)
+            try
             {
-                if (effect.skill_state == enum_skill_state.em_immunity)
+                foreach (var effect in skill_Effects)
                 {
-                    skill_Effects.Remove(effect);
-                    return true;
+                    if (effect.skill_state == enum_skill_state.em_immunity)
+                    {
+                        skill_Effects.Remove(effect);
+                        return true;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return false;
         }
 
         private bool phantom_dice()
         {
-            foreach (var effect in skill_Effects)
+            try
             {
-                if (effect.skill_state == enum_skill_state.em_phantom_dice)
+                foreach (var effect in skill_Effects)
                 {
-                    return true;
+                    if (effect.skill_state == enum_skill_state.em_phantom_dice)
+                    {
+                        return true;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return false;
         }
 
         private bool fake_dice()
         {
-            foreach (var effect in skill_Effects)
+            try
             {
-                if (effect.skill_state == enum_skill_state.em_fake_dice)
+                foreach (var effect in skill_Effects)
                 {
-                    return true;
+                    if (effect.skill_state == enum_skill_state.em_fake_dice)
+                    {
+                        return true;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return false;
         }
 
         public void set_animal_order(List<animal_game_info> animal_info)
         {
-            if (animal_info.Count != 3)
+            try
             {
-                throw new SetAnimalOrderError($"animal_info count != 3, player.guid:{_game_info.guid}");
-            }
-            _game_info.animal_info = animal_info;
-
-            foreach (var _animal in animal_info)
-            {
-                if (_animal.animal_id == animal.mouse)
+                if (animal_info.Count != 3)
                 {
-                    props_list.Add(props.clip);
-                    props_list.Add(props.landmine);
-                    props_list.Add(props.spring);
-                    _impl.GameClientCaller.get_client(uuid).ntf_player_prop_list(props_list);
+                    throw new SetAnimalOrderError($"animal_info count != 3, player.guid:{_game_info.guid}");
                 }
+                _game_info.animal_info = animal_info;
+
+                foreach (var _animal in animal_info)
+                {
+                    if (_animal.animal_id == animal.mouse)
+                    {
+                        props_list.Add(props.clip);
+                        props_list.Add(props.landmine);
+                        props_list.Add(props.spring);
+                        _impl.GameClientCaller.get_client(uuid).ntf_player_prop_list(props_list);
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
         public void set_skill(skill skill_id)
         {
-            _game_info.skill_id = skill_id;
+            try
+            {
+                _game_info.skill_id = skill_id;
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public void add_special_grid_effect(special_grid_effect _effect)
         {
-            special_grid_effects.Add(_effect);
+            try
+            {
+                special_grid_effects.Add(_effect);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         private bool check_skill_state_can_use_props()
         {
-            foreach (var skill in skill_Effects)
+            try
             {
-                if (skill.skill_state == enum_skill_state.em_unable_use_props)
+                foreach (var skill in skill_Effects)
                 {
-                    return true;
+                    if (skill.skill_state == enum_skill_state.em_unable_use_props)
+                    {
+                        return true;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return false;
         }
 
         private bool check_skill_state_can_move()
         {
-            foreach (var skill in skill_Effects)
+            try
             {
-                if (skill.skill_state == enum_skill_state.em_can_not_move)
+                foreach (var skill in skill_Effects)
                 {
-                    return true;
+                    if (skill.skill_state == enum_skill_state.em_can_not_move)
+                    {
+                        return true;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return false;
         }
 
         private void check_skill_state()
         {
-            foreach (var skill in skill_Effects)
+            try
             {
-                if (skill.skill_state == enum_skill_state.em_phantom_dice)
+                foreach (var skill in skill_Effects)
                 {
-                    active_State.phantom_dice = true;
+                    if (skill.skill_state == enum_skill_state.em_phantom_dice)
+                    {
+                        active_State.phantom_dice = true;
+                    }
+                    else if (skill.skill_state == enum_skill_state.em_move_halved)
+                    {
+                        active_State.move_coefficient *= 0.5f;
+                    }
+                    else if (skill.skill_state == enum_skill_state.em_action_three)
+                    {
+                        active_State.round_active_num = 3;
+                    }
+                    else if (skill.skill_state == enum_skill_state.em_preemptive_strike)
+                    {
+                        active_State.preemptive_strike = true;
+                    }
+                    else if (skill.skill_state == enum_skill_state.em_fake_dice)
+                    {
+                        active_State.fake_dice = true;
+                    }
                 }
-                else if (skill.skill_state == enum_skill_state.em_move_halved)
-                {
-                    active_State.move_coefficient *= 0.5f;
-                }
-                else if (skill.skill_state == enum_skill_state.em_action_three)
-                {
-                    active_State.round_active_num = 3;
-                }
-                else if (skill.skill_state == enum_skill_state.em_preemptive_strike)
-                {
-                    active_State.preemptive_strike = true;
-                }
-                else if (skill.skill_state == enum_skill_state.em_fake_dice)
-                {
-                    active_State.fake_dice = true;
-                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
         private void reset_animal_play_active_states()
         {
-            if (active_State.animal_play_active_states == null)
+            try
             {
-                active_State.animal_play_active_states = new();
+                if (active_State.animal_play_active_states == null)
+                {
+                    active_State.animal_play_active_states = new();
+                }
+                else
+                {
+                    active_State.animal_play_active_states.Clear();
+                }
             }
-            else
+            catch (System.Exception e)
             {
-                active_State.animal_play_active_states.Clear();
+                log.log.err(e.Message);
             }
         }
 
         private animal_play_active_state check_animal_play_active_state(short animal_index, bool can_not_use_props, bool can_not_move)
         {
             var animal_active_state = new animal_play_active_state();
-            animal_active_state.animal_index = animal_index;
-            animal_active_state.move_coefficient = active_State.move_coefficient;
-
-            var _animal = PlayerGameInfo.animal_info[animal_index];
-
-            if (can_not_use_props || props_list.Count <= 0)
+            try
             {
-                animal_active_state.could_use_props = false;
-            }
-            else
-            {
-                animal_active_state.could_use_props = true;
-                animal_active_state.use_props_count = 1;
-            }
+                animal_active_state.animal_index = animal_index;
+                animal_active_state.move_coefficient = active_State.move_coefficient;
 
-            foreach (var grid_effect in special_grid_effects)
-            {
-                if (grid_effect.continued_rounds > 0)
+                var _animal = PlayerGameInfo.animal_info[animal_index];
+
+                if (can_not_use_props || props_list.Count <= 0)
                 {
-                    if (grid_effect.animal_index >= 0)
-                    {
-                        animal_active_state.move_coefficient *= grid_effect.move_coefficient;
-                    }
+                    animal_active_state.could_use_props = false;
                 }
-            }
-
-            if (can_not_move || !_animal.could_move || _animal.current_pos >= (_impl.PlayergroundLenght - 1))
-            {
-                log.log.trace($"{PlayerGameInfo.uuid} can not move!");
-                animal_active_state.could_throw_dice = false;
-            }
-            else
-            {
-                animal_active_state.could_throw_dice = true;
-
-                foreach (var skill in skill_Effects)
+                else
                 {
-                    if (skill.skill_state == enum_skill_state.em_step_lotus)
+                    animal_active_state.could_use_props = true;
+                    animal_active_state.use_props_count = 1;
+                }
+
+                foreach (var grid_effect in special_grid_effects)
+                {
+                    if (grid_effect.continued_rounds > 0)
                     {
-                        if (_animal.animal_id == skill.active_animal)
+                        if (grid_effect.animal_index >= 0)
                         {
-                            animal_active_state.is_step_lotus = true;
+                            animal_active_state.move_coefficient *= grid_effect.move_coefficient;
                         }
                     }
                 }
 
-                if (_animal.animal_id == animal.duck)
+                if (can_not_move || !_animal.could_move || _animal.current_pos >= (_impl.PlayergroundLenght - 1))
                 {
-                    log.log.trace($"uuid:{PlayerGameInfo.uuid}, current_animal_index:{animal_index}, animal_id:{_animal.animal_id}");
-                    animal_active_state.throw_dice_count = 2;
+                    log.log.trace($"{PlayerGameInfo.uuid} can not move!");
+                    animal_active_state.could_throw_dice = false;
                 }
                 else
                 {
-                    animal_active_state.throw_dice_count = 1;
+                    animal_active_state.could_throw_dice = true;
+
+                    foreach (var skill in skill_Effects)
+                    {
+                        if (skill.skill_state == enum_skill_state.em_step_lotus)
+                        {
+                            if (_animal.animal_id == skill.active_animal)
+                            {
+                                animal_active_state.is_step_lotus = true;
+                            }
+                        }
+                    }
+
+                    if (_animal.animal_id == animal.duck)
+                    {
+                        log.log.trace($"uuid:{PlayerGameInfo.uuid}, current_animal_index:{animal_index}, animal_id:{_animal.animal_id}");
+                        animal_active_state.throw_dice_count = 2;
+                    }
+                    else
+                    {
+                        animal_active_state.throw_dice_count = 1;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
 
             return animal_active_state;
@@ -520,118 +641,132 @@ namespace game
 
         public void summary_skill_effect()
         {
-            bool can_not_use_skill = false;
-            bool can_not_use_props, can_not_move;
-
-            preemptive_strike_is_active = false;
-            active_State.move_coefficient = 1.5f;
-            active_State.round_active_num = 1;
-
-            foreach (var grid_effect in special_grid_effects)
+            try
             {
-                if (grid_effect.continued_rounds > 0)
+                bool can_not_use_skill = false;
+                bool can_not_use_props, can_not_move;
+
+                preemptive_strike_is_active = false;
+                active_State.move_coefficient = 1.5f;
+                active_State.round_active_num = 1;
+
+                foreach (var grid_effect in special_grid_effects)
                 {
-                    if (grid_effect.animal_index < 0)
+                    if (grid_effect.continued_rounds > 0)
                     {
-                        active_State.move_coefficient *= grid_effect.move_coefficient;
+                        if (grid_effect.animal_index < 0)
+                        {
+                            active_State.move_coefficient *= grid_effect.move_coefficient;
+                        }
+                        if (active_State.round_active_num < grid_effect.mutil_rounds)
+                        {
+                            active_State.round_active_num = (short)grid_effect.mutil_rounds;
+                        }
                     }
-                    if (active_State.round_active_num < grid_effect.mutil_rounds)
+                    else if (grid_effect.stop_rounds > 0)
                     {
-                        active_State.round_active_num = (short)grid_effect.mutil_rounds;
+                        can_not_use_skill = true;
+                        can_not_use_props = true;
+                        can_not_move = true;
                     }
                 }
-                else if (grid_effect.stop_rounds > 0)
+                can_not_use_props = check_skill_state_can_use_props();
+                can_not_move = check_skill_state_can_move();
+                check_skill_state();
+
+                if (!can_not_use_skill && check_could_use_skill() && PlayerGameInfo.skill_id != 0)
                 {
-                    can_not_use_skill = true;
-                    can_not_use_props = true;
-                    can_not_move = true;
+                    active_State.could_use_skill = true;
+                }
+
+                reset_animal_play_active_states();
+                for (short i = 0; i < PlayerGameInfo.animal_info.Count; i++)
+                {
+                    var animal_active_state = check_animal_play_active_state(i, can_not_use_props, can_not_move);
+
+                    if (!animal_active_state.could_use_props && !animal_active_state.could_throw_dice)
+                    {
+                        if (PlayerGameInfo.current_animal_index == i)
+                        {
+                            PlayerGameInfo.current_animal_index = -1;
+                        }
+                    }
+                    else
+                    {
+                        if (PlayerGameInfo.current_animal_index == -1)
+                        {
+                            PlayerGameInfo.current_animal_index = i;
+                        }
+                    }
+
+                    active_State.animal_play_active_states.Add(animal_active_state);
                 }
             }
-            can_not_use_props = check_skill_state_can_use_props();
-            can_not_move = check_skill_state_can_move();
-            check_skill_state();
-
-            if (!can_not_use_skill && check_could_use_skill() && PlayerGameInfo.skill_id != 0)
+            catch (System.Exception e)
             {
-                active_State.could_use_skill = true;
-            }
-
-            reset_animal_play_active_states();
-            for (short i = 0; i < PlayerGameInfo.animal_info.Count; i++)
-            {
-                var animal_active_state = check_animal_play_active_state(i, can_not_use_props, can_not_move);
-
-                if (!animal_active_state.could_use_props && !animal_active_state.could_throw_dice)
-                {
-                    if (PlayerGameInfo.current_animal_index == i)
-                    {
-                        PlayerGameInfo.current_animal_index = -1;
-                    }
-                }
-                else
-                {
-                    if (PlayerGameInfo.current_animal_index == -1)
-                    {
-                        PlayerGameInfo.current_animal_index = i;
-                    }
-                }
-
-                active_State.animal_play_active_states.Add(animal_active_state);
+                log.log.err(e.Message);
             }
         }
 
         public void iterater_skill_effect()
         {
-            var _due_skill_effect = new List<skill_effect>();
-            foreach (var _skill_effect in skill_Effects)
+            try
             {
-                _skill_effect.continued_rounds--;
-                if (_skill_effect.continued_rounds <= 0)
+                var _due_skill_effect = new List<skill_effect>();
+                foreach (var _skill_effect in skill_Effects)
                 {
-                    _due_skill_effect.Add(_skill_effect);
+                    _skill_effect.continued_rounds--;
+                    if (_skill_effect.continued_rounds <= 0)
+                    {
+                        _due_skill_effect.Add(_skill_effect);
+                    }
                 }
-            }
-            foreach (var _skill_effect in _due_skill_effect)
-            {
-                skill_Effects.Remove(_skill_effect);
-            }
+                foreach (var _skill_effect in _due_skill_effect)
+                {
+                    skill_Effects.Remove(_skill_effect);
+                }
 
-            var _due_special_grid_effect = new List<special_grid_effect>();
-            foreach (var grid_effect in special_grid_effects)
-            {
-                if (grid_effect.continued_rounds > 0)
+                var _due_special_grid_effect = new List<special_grid_effect>();
+                foreach (var grid_effect in special_grid_effects)
                 {
-                    grid_effect.continued_rounds--;
-                }
-                else if (grid_effect.stop_rounds > 0)
-                {
-                    grid_effect.stop_rounds--;
-                    if (grid_effect.stop_rounds <= 0)
+                    if (grid_effect.continued_rounds > 0)
+                    {
+                        grid_effect.continued_rounds--;
+                    }
+                    else if (grid_effect.stop_rounds > 0)
+                    {
+                        grid_effect.stop_rounds--;
+                        if (grid_effect.stop_rounds <= 0)
+                        {
+                            _due_special_grid_effect.Add(grid_effect);
+                        }
+                    }
+                    else
                     {
                         _due_special_grid_effect.Add(grid_effect);
                     }
                 }
-                else
+                foreach (var _grid_effect in _due_special_grid_effect)
                 {
-                    _due_special_grid_effect.Add(grid_effect);
+                    special_grid_effects.Remove(_grid_effect);
                 }
-            }
-            foreach (var _grid_effect in _due_special_grid_effect)
-            {
-                special_grid_effects.Remove(_grid_effect);
-            }
 
-            foreach (var _animal in PlayerGameInfo.animal_info)
-            {
-                if (!_animal.could_move)
+                foreach (var _animal in PlayerGameInfo.animal_info)
                 {
-                    _animal.unmovable_rounds--;
-                    if (_animal.unmovable_rounds <= 0)
+                    if (!_animal.could_move)
                     {
-                        _animal.could_move = true;
-                        _animal.unmovable_rounds = 0;
+                        _animal.unmovable_rounds--;
+                        if (_animal.unmovable_rounds <= 0)
+                        {
+                            _animal.could_move = true;
+                            _animal.unmovable_rounds = 0;
+                        }
                     }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
@@ -674,12 +809,19 @@ namespace game
 
         private animal_play_active_state get_animal_play_active_state(short index)
         {
-            foreach (var state in active_State.animal_play_active_states)
+            try
             {
-                if (state.animal_index == index)
+                foreach (var state in active_State.animal_play_active_states)
                 {
-                    return state;
+                    if (state.animal_index == index)
+                    {
+                        return state;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return null;
         }
@@ -747,30 +889,60 @@ namespace game
         {
             var retTask = new TaskCompletionSource<int>();
 
-            if (IsAutoActive)
+            try
             {
-                var dice = dice_list[0] > dice_list[1] ? dice_list[0] : dice_list[1];
-                _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).rabbit_choose_dice(dice);
-                retTask.SetResult(dice);
+                if (IsAutoActive)
+                {
+                    var dice = dice_list[0] > dice_list[1] ? dice_list[0] : dice_list[1];
+                    _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).rabbit_choose_dice(dice);
+                    retTask.SetResult(dice);
+                }
+                else
+                {
+                    _impl.GameClientCaller.get_client(uuid).choose_dice().callBack((index) =>
+                    {
+                        try
+                        {
+                            var dice = dice_list[index];
+                            _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).rabbit_choose_dice(dice);
+                            retTask.SetResult(dice);
+                        }
+                        catch (System.Exception e)
+                        {
+                            log.log.err(e.Message);
+                        }
+
+                    }, () =>
+                    {
+                        try
+                        {
+                            var dice = dice_list[0] > dice_list[1] ? dice_list[0] : dice_list[1];
+                            _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).rabbit_choose_dice(dice);
+                            retTask.SetResult(dice);
+                        }
+                        catch (System.Exception e)
+                        {
+                            log.log.err(e.Message);
+                        }
+
+                    }).timeout(8000, () =>
+                    {
+                        try
+                        {
+                            var dice = dice_list[0] > dice_list[1] ? dice_list[0] : dice_list[1];
+                            _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).rabbit_choose_dice(dice);
+                            retTask.SetResult(dice);
+                        }
+                        catch (System.Exception e)
+                        {
+                            log.log.err(e.Message);
+                        }
+                    });
+                }
             }
-            else
+            catch (System.Exception e)
             {
-                _impl.GameClientCaller.get_client(uuid).choose_dice().callBack((index) =>
-                {
-                    var dice = dice_list[index];
-                    _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).rabbit_choose_dice(dice);
-                    retTask.SetResult(dice);
-                }, () =>
-                {
-                    var dice = dice_list[0] > dice_list[1] ? dice_list[0] : dice_list[1];
-                    _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).rabbit_choose_dice(dice);
-                    retTask.SetResult(dice);
-                }).timeout(8000, () =>
-                {
-                    var dice = dice_list[0] > dice_list[1] ? dice_list[0] : dice_list[1];
-                    _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).rabbit_choose_dice(dice);
-                    retTask.SetResult(dice);
-                });
+                log.log.err(e.Message);
             }
 
             return retTask.Task;
@@ -778,10 +950,17 @@ namespace game
 
         public async Task check_stepped_effect()
         {
-            for (short i = 0; i < PlayerGameInfo.animal_info.Count; ++i)
+            try
             {
-                var _animal_info = PlayerGameInfo.animal_info[i];
-                await _impl.check_pick_up(this, _animal_info, i, -1, -1);
+                for (short i = 0; i < PlayerGameInfo.animal_info.Count; ++i)
+                {
+                    var _animal_info = PlayerGameInfo.animal_info[i];
+                    await _impl.check_pick_up(this, _animal_info, i, -1, -1);
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
@@ -789,36 +968,65 @@ namespace game
         {
             var task = new TaskCompletionSource<int>();
 
-            var uuids = new List<string>(_impl.ClientUUIDS);
-            uuids.Remove(uuid);
-            _impl.GameClientCaller.get_multicast(uuids).throw_animal_ntf(PlayerGameInfo.guid, guid, animal_index, target_pos);
+            try
+            {
+                var uuids = new List<string>(_impl.ClientUUIDS);
+                uuids.Remove(uuid);
+                _impl.GameClientCaller.get_multicast(uuids).throw_animal_ntf(PlayerGameInfo.guid, guid, animal_index, target_pos);
 
-            if (PlayerGameInfo.guid > 0 && !is_auto_active)
-            {
-                _impl.GameClientCaller.get_client(uuid).throw_animal(PlayerGameInfo.guid, guid, animal_index, target_pos).callBack((pos) =>
+                if (PlayerGameInfo.guid > 0 && !is_auto_active)
                 {
-                    task.SetResult(pos);
-                }, () =>
+                    _impl.GameClientCaller.get_client(uuid).throw_animal(PlayerGameInfo.guid, guid, animal_index, target_pos).callBack((pos) =>
+                    {
+                        try
+                        {
+                            task.SetResult(pos);
+                        }
+                        catch (System.Exception e)
+                        {
+                            log.log.err(e.Message);
+                        }
+
+                    }, () =>
+                    {
+                        log.log.err("get_throw_animal_target_pos callback err!");
+                    }).timeout(4000, () =>
+                    {
+                        try
+                        {
+                            task.SetResult(target_pos[target_pos.Count - 1]);
+                        }
+                        catch (System.Exception e)
+                        {
+                            log.log.err(e.Message);
+                        }
+                    });
+                }
+                else
                 {
-                    log.log.err("get_throw_animal_target_pos callback err!");
-                }).timeout(4000, () =>
-                {
-                    task.SetResult(target_pos[target_pos.Count - 1]);
-                });
+                    hub.hub._timer.addticktime(1000, (tick) =>
+                    {
+                        try
+                        {
+                            if (PlayerGameInfo.guid == guid)
+                            {
+                                task.SetResult(target_pos[target_pos.Count - 1]);
+                            }
+                            else
+                            {
+                                task.SetResult(target_pos[0]);
+                            }
+                        }
+                        catch (System.Exception e)
+                        {
+                            log.log.err(e.Message);
+                        }
+                    });
+                }
             }
-            else
+            catch (System.Exception e)
             {
-                hub.hub._timer.addticktime(1000, (tick) =>
-                {
-                    if (PlayerGameInfo.guid == guid)
-                    {
-                        task.SetResult(target_pos[target_pos.Count - 1]);
-                    }
-                    else
-                    {
-                        task.SetResult(target_pos[0]);
-                    }
-                });
+                log.log.err(e.Message);
             }
 
             return task.Task;
@@ -826,55 +1034,62 @@ namespace game
 
         private bool check_throw_stepped_other_animal(client_proxy _client, animal_game_info throw_target, short throw_target_index, bool is_forward)
         {
-            if (throw_target.current_pos >= (_impl.PlayergroundLenght - 1))
+            try
             {
-                return false;
-            }
-
-            if (throw_target.current_pos <= 0)
-            {
-                return false;
-            }
-
-            foreach (var player in _impl.ClientProxys)
-            {
-                for (short index = 0; index < player._game_info.animal_info.Count; ++index)
+                if (throw_target.current_pos >= (_impl.PlayergroundLenght - 1))
                 {
-                    var _other = player._game_info.animal_info[index];
+                    return false;
+                }
 
-                    if (player == _client && _other.animal_id == throw_target.animal_id)
-                    {
-                        continue;
-                    }
+                if (throw_target.current_pos <= 0)
+                {
+                    return false;
+                }
 
-                    if (_other.current_pos == throw_target.current_pos)
+                foreach (var player in _impl.ClientProxys)
+                {
+                    for (short index = 0; index < player._game_info.animal_info.Count; ++index)
                     {
-                        var from = throw_target.current_pos;
-                        if (is_forward)
+                        var _other = player._game_info.animal_info[index];
+
+                        if (player == _client && _other.animal_id == throw_target.animal_id)
                         {
-                            throw_target.current_pos += 1;
+                            continue;
                         }
-                        else
+
+                        if (_other.current_pos == throw_target.current_pos)
                         {
-                            throw_target.current_pos -= 1;
-                        }
-                        if (throw_target.current_pos >= (_impl.PlayergroundLenght - 1))
-                        {
-                            throw_target.current_pos = (short)_impl.PlayergroundLenght;
-                            if (check_done_play())
+                            var from = throw_target.current_pos;
+                            if (is_forward)
                             {
-                                is_done_play = true;
-                                _impl.DonePlayClient = this;
-                                _impl.check_done_play();
+                                throw_target.current_pos += 1;
                             }
+                            else
+                            {
+                                throw_target.current_pos -= 1;
+                            }
+                            if (throw_target.current_pos >= (_impl.PlayergroundLenght - 1))
+                            {
+                                throw_target.current_pos = (short)_impl.PlayergroundLenght;
+                                if (check_done_play())
+                                {
+                                    is_done_play = true;
+                                    _impl.DonePlayClient = this;
+                                    _impl.check_done_play();
+                                }
+                            }
+
+                            var move_coefficient = 1.2f;
+                            _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).move(_client.PlayerGameInfo.guid, throw_target_index, move_coefficient, from, throw_target.current_pos);
+
+                            return true;
                         }
-
-                        var move_coefficient = 1.2f;
-                        _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).move(_client.PlayerGameInfo.guid, throw_target_index, move_coefficient, from, throw_target.current_pos);
-
-                        return true;
                     }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
 
             return false;
@@ -882,31 +1097,45 @@ namespace game
 
         private void check_lion_snatch_props(client_proxy player, animal_game_info self, short index)
         {
-            if (player != this && player.props_list.Count > 0 && self.animal_id == animal.lion)
+            try
             {
-                var prop_id = player.props_list[(int)hub.hub.randmon_uint((uint)player.props_list.Count)];
-                player.props_list.Remove(prop_id);
-                props_list.Add(prop_id);
+                if (player != this && player.props_list.Count > 0 && self.animal_id == animal.lion)
+                {
+                    var prop_id = player.props_list[(int)hub.hub.randmon_uint((uint)player.props_list.Count)];
+                    player.props_list.Remove(prop_id);
+                    props_list.Add(prop_id);
 
-                _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).animal_effect_touch_off(_game_info.guid, _game_info.current_animal_index, player._game_info.guid, index);
-                _impl.GameClientCaller.get_client(uuid).ntf_player_prop_list(props_list);
+                    _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).animal_effect_touch_off(_game_info.guid, _game_info.current_animal_index, player._game_info.guid, index);
+                    _impl.GameClientCaller.get_client(uuid).ntf_player_prop_list(props_list);
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
         private List<int> throw_animal_pos_list(animal_game_info self)
         {
-            var const_target_pos_list = new List<int>() { self.current_pos - 2, self.current_pos - 1, self.current_pos + 1, self.current_pos + 2 };
-            if (self.animal_id == animal.bear)
-            {
-                const_target_pos_list = new List<int>() { self.current_pos - 3, self.current_pos - 2, self.current_pos - 1, self.current_pos + 1, self.current_pos + 2, self.current_pos + 3 };
-            }
             var target_pos_list = new List<int>();
-            foreach (var pos in const_target_pos_list)
+            try
             {
-                if (pos >= 0 && pos < (_impl.PlayergroundLenght - 1))
+                var const_target_pos_list = new List<int>() { self.current_pos - 2, self.current_pos - 1, self.current_pos + 1, self.current_pos + 2 };
+                if (self.animal_id == animal.bear)
                 {
-                    target_pos_list.Add(pos);
+                    const_target_pos_list = new List<int>() { self.current_pos - 3, self.current_pos - 2, self.current_pos - 1, self.current_pos + 1, self.current_pos + 2, self.current_pos + 3 };
                 }
+                foreach (var pos in const_target_pos_list)
+                {
+                    if (pos >= 0 && pos < (_impl.PlayergroundLenght - 1))
+                    {
+                        target_pos_list.Add(pos);
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
 
             return target_pos_list;
@@ -914,56 +1143,70 @@ namespace game
 
         private async Task check_throw_animal(client_proxy player, short index, animal_game_info _other, animal_game_info self)
         {
-            var target_pos_list = throw_animal_pos_list(self);
-            var target_pos = await get_throw_animal_target_pos(player._game_info.guid, index, target_pos_list);
-            _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).throw_animal_move(player._game_info.guid, index, _other.current_pos, target_pos);
-
-            var from = _other.current_pos;
-            await _impl.check_pick_up(player, _other, index, from, _other.current_pos);
-
-            var move = target_pos - _other.current_pos;
-            var wait_time = (int)((float)Math.Abs(move) * 64 / (constant.speed * 1.2) + 500);
-            await Task.Delay(wait_time);
-
-            _other.current_pos = (short)target_pos;
-            from = _other.current_pos;
-            while (check_throw_stepped_other_animal(player, _other, index, move > 0))
+            try
             {
-                await _impl.check_pick_up(player, _other, index, from, _other.current_pos);
-                from = _other.current_pos;
+                var target_pos_list = throw_animal_pos_list(self);
+                var target_pos = await get_throw_animal_target_pos(player._game_info.guid, index, target_pos_list);
+                _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).throw_animal_move(player._game_info.guid, index, _other.current_pos, target_pos);
 
-                wait_time = (int)((float)2 * 64 / (constant.speed * 1.5) + 500);
+                var from = _other.current_pos;
+                await _impl.check_pick_up(player, _other, index, from, _other.current_pos);
+
+                var move = target_pos - _other.current_pos;
+                var wait_time = (int)((float)Math.Abs(move) * 64 / (constant.speed * 1.2) + 500);
                 await Task.Delay(wait_time);
+
+                _other.current_pos = (short)target_pos;
+                from = _other.current_pos;
+                while (check_throw_stepped_other_animal(player, _other, index, move > 0))
+                {
+                    await _impl.check_pick_up(player, _other, index, from, _other.current_pos);
+                    from = _other.current_pos;
+
+                    wait_time = (int)((float)2 * 64 / (constant.speed * 1.5) + 500);
+                    await Task.Delay(wait_time);
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
         private async Task check_stepped_other_animal(animal_game_info self)
         {
-            if (self.current_pos >= (_impl.PlayergroundLenght - 1))
+            try
             {
-                return;
-            }
-
-            foreach (var player in _impl.ClientProxys)
-            {
-                for (short index = 0; index < player._game_info.animal_info.Count; ++index)
+                if (self.current_pos >= (_impl.PlayergroundLenght - 1))
                 {
-                    animal_game_info _other = player._game_info.animal_info[index];
+                    return;
+                }
 
-                    if (player == this && _other.animal_id == self.animal_id)
+                foreach (var player in _impl.ClientProxys)
+                {
+                    for (short index = 0; index < player._game_info.animal_info.Count; ++index)
                     {
-                        continue;
-                    }
+                        animal_game_info _other = player._game_info.animal_info[index];
 
-                    if (_other.current_pos == self.current_pos)
-                    {
-                        check_lion_snatch_props(player, self, index);
-                        _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).ntf_animal_be_stepped(player._game_info.guid, index);
-                        await check_throw_animal(player, index, _other, self);
+                        if (player == this && _other.animal_id == self.animal_id)
+                        {
+                            continue;
+                        }
 
-                        return;
+                        if (_other.current_pos == self.current_pos)
+                        {
+                            check_lion_snatch_props(player, self, index);
+                            _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).ntf_animal_be_stepped(player._game_info.guid, index);
+                            await check_throw_animal(player, index, _other, self);
+
+                            return;
+                        }
                     }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
@@ -971,22 +1214,29 @@ namespace game
         {
             long target_guid = -4;
             short target_animal_index = -1;
-            short pos = short.MaxValue;
-            foreach (var _client in _impl.ClientProxys)
+            try
             {
-                if (_client != this)
+                short pos = short.MaxValue;
+                foreach (var _client in _impl.ClientProxys)
                 {
-                    for (short i = 0; i < _client.PlayerGameInfo.animal_info.Count; i++)
+                    if (_client != this)
                     {
-                        var animal = _client.PlayerGameInfo.animal_info[i];
-                        if (animal.current_pos > _animal_info.current_pos && animal.current_pos < pos)
+                        for (short i = 0; i < _client.PlayerGameInfo.animal_info.Count; i++)
                         {
-                            target_guid = _client.PlayerGameInfo.guid;
-                            target_animal_index = i;
-                            pos = animal.current_pos;
+                            var animal = _client.PlayerGameInfo.animal_info[i];
+                            if (animal.current_pos > _animal_info.current_pos && animal.current_pos < pos)
+                            {
+                                target_guid = _client.PlayerGameInfo.guid;
+                                target_animal_index = i;
+                                pos = animal.current_pos;
+                            }
                         }
                     }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
 
             return Tuple.Create(target_guid, target_animal_index);
@@ -995,76 +1245,97 @@ namespace game
         private List<int> randmon_dice(animal_play_active_state animal_state)
         {
             var dice_list = new List<int>();
-            for (var i = 0; i < animal_state.throw_dice_count; i++)
+            try
             {
-                if (phantom_dice())
+                for (var i = 0; i < animal_state.throw_dice_count; i++)
                 {
-                    var n = 6;
-                    dice_list.Add(n);
+                    if (phantom_dice())
+                    {
+                        var n = 6;
+                        dice_list.Add(n);
+                    }
+                    else if (fake_dice())
+                    {
+                        var n = (int)hub.hub.randmon_uint(3) + 1;
+                        dice_list.Add(n);
+                    }
+                    else
+                    {
+                        var n = (int)hub.hub.randmon_uint(6) + 1;
+                        dice_list.Add(n);
+                    }
                 }
-                else if (fake_dice())
-                {
-                    var n = (int)hub.hub.randmon_uint(3) + 1;
-                    dice_list.Add(n);
-                }
-                else
-                {
-                    var n = (int)hub.hub.randmon_uint(6) + 1;
-                    dice_list.Add(n);
-                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return dice_list;
         }
 
         private short animal_move_effect(animal_game_info _animal_info, short move)
         {
-            if (_animal_info.animal_id == animal.rabbit)
+            try
             {
-                if (_animal_info.continuous_move_rounds < 5)
+                if (_animal_info.animal_id == animal.rabbit)
                 {
-                    move += 1;
+                    if (_animal_info.continuous_move_rounds < 5)
+                    {
+                        move += 1;
+                    }
+                    else
+                    {
+                        move += 2;
+                    }
                 }
-                else
+                else if (_animal_info.animal_id == animal.chicken)
                 {
-                    move += 2;
+                    move -= 1;
+                    move = (short)(move <= 0 ? 1 : move);
                 }
             }
-            else if (_animal_info.animal_id == animal.chicken)
+            catch (System.Exception e)
             {
-                move -= 1;
-                move = (short)(move <= 0 ? 1 : move);
+                log.log.err(e.Message);
             }
             return move;
         }
 
         private void check_animal_action_effect(animal_game_info _animal_info)
         {
-            if (_animal_info.animal_id == animal.chicken)
+            try
             {
-                if (_animal_info.continuous_move_rounds >= 3)
+                if (_animal_info.animal_id == animal.chicken)
                 {
-                    var (target_guid, target_index) = get_nearest_ahead_animal(_animal_info);
-                    if (target_guid > -4 && target_index > -1)
+                    if (_animal_info.continuous_move_rounds >= 3)
                     {
-                        var target_client = _impl.get_client_proxy(target_guid);
-                        var taget_animal = target_client._game_info.animal_info[target_index];
+                        var (target_guid, target_index) = get_nearest_ahead_animal(_animal_info);
+                        if (target_guid > -4 && target_index > -1)
+                        {
+                            var target_client = _impl.get_client_proxy(target_guid);
+                            var taget_animal = target_client._game_info.animal_info[target_index];
 
-                        var tmp = _animal_info.current_pos;
-                        _animal_info.current_pos = taget_animal.current_pos;
-                        taget_animal.current_pos = tmp;
+                            var tmp = _animal_info.current_pos;
+                            _animal_info.current_pos = taget_animal.current_pos;
+                            taget_animal.current_pos = tmp;
 
-                        _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).animal_effect_touch_off(_game_info.guid, _game_info.current_animal_index, target_guid, target_index);
-                        _animal_info.continuous_move_rounds = 0;
+                            _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).animal_effect_touch_off(_game_info.guid, _game_info.current_animal_index, target_guid, target_index);
+                            _animal_info.continuous_move_rounds = 0;
+                        }
                     }
                 }
-            }
-            else if (_animal_info.animal_id == animal.monkey && _animal_info.continuous_move_rounds >= 3)
-            {
-                props_list.Add(props.help_vellus);
-                _impl.GameClientCaller.get_client(uuid).ntf_player_prop_list(props_list);
-                _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).animal_effect_touch_off(_game_info.guid, _game_info.current_animal_index, 0, 0);
+                else if (_animal_info.animal_id == animal.monkey && _animal_info.continuous_move_rounds >= 3)
+                {
+                    props_list.Add(props.help_vellus);
+                    _impl.GameClientCaller.get_client(uuid).ntf_player_prop_list(props_list);
+                    _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).animal_effect_touch_off(_game_info.guid, _game_info.current_animal_index, 0, 0);
 
-                _animal_info.continuous_move_rounds = 0;
+                    _animal_info.continuous_move_rounds = 0;
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
@@ -1161,14 +1432,123 @@ namespace game
 
         private Tuple<long, short> random_skill_target()
         {
-            long target_guid;
-            short target_animal_index;
-            if (PlayerGameInfo.skill_id == skill.step_lotus)
+            long target_guid = -1;
+            short target_animal_index = 0;
+            try
             {
-                target_guid = PlayerGameInfo.guid;
-                target_animal_index = PlayerGameInfo.current_animal_index;
+                if (PlayerGameInfo.skill_id == skill.step_lotus)
+                {
+                    target_guid = PlayerGameInfo.guid;
+                    target_animal_index = PlayerGameInfo.current_animal_index;
+                }
+                else
+                {
+                    client_proxy _target_client = null;
+                    foreach (var _client in _impl.ClientProxys)
+                    {
+                        if (_client != this)
+                        {
+                            _target_client = _client;
+                            break;
+                        }
+                    }
+
+                    target_guid = _target_client.PlayerGameInfo.guid;
+                    target_animal_index = _target_client.PlayerGameInfo.current_animal_index;
+                }
+                target_animal_index = (short)(target_animal_index < 0 ? 0 : target_animal_index);
             }
-            else
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
+            return Tuple.Create(target_guid, target_animal_index);
+        }
+
+        private Tuple<short, short> get_last_animal_and_pos()
+        {
+            short index = 0;
+            short min_pos = (short)_impl.PlayergroundLenght;
+            try
+            {
+                for (var i = 0; i < PlayerGameInfo.animal_info.Count; i++)
+                {
+                    var animal = PlayerGameInfo.animal_info[i];
+                    if (animal.current_pos < min_pos)
+                    {
+                        index = (short)i;
+                        min_pos = animal.current_pos;
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
+            return Tuple.Create(index, min_pos);
+        }
+
+        private Tuple<long, short> get_front_target(short pos)
+        {
+            long target_guid = -4;
+            short target_animal_index = 0;
+            try
+            {
+                foreach (var _client in _impl.ClientProxys)
+                {
+                    if (_client != this)
+                    {
+                        for (var i = 0; i < _client.PlayerGameInfo.animal_info.Count; i++)
+                        {
+                            var animal = _client.PlayerGameInfo.animal_info[i];
+                            if (animal.current_pos > pos)
+                            {
+                                target_guid = _client.PlayerGameInfo.guid;
+                                target_animal_index = (short)i;
+                                pos = animal.current_pos;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
+
+            return Tuple.Create(target_guid, target_animal_index);
+        }
+
+        private async Task auto_use_skill()
+        {
+            try
+            {
+                if (PlayerGameInfo.skill_id == skill.soul_moving_method || PlayerGameInfo.skill_id == skill.swap_places)
+                {
+                    var last_animal = get_last_animal_and_pos();
+                    PlayerGameInfo.current_animal_index = last_animal.Item1;
+                    _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).relay(PlayerGameInfo.guid, PlayerGameInfo.current_animal_index, true);
+                    await Task.Delay(constant.wait_relay_animal);
+                    var target = get_front_target(last_animal.Item2);
+                    await use_skill(target.Item1, target.Item2);
+                }
+                else
+                {
+                    var target = random_skill_target();
+                    await use_skill(target.Item1, target.Item2);
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
+        }
+
+        private Tuple<long, short> random_prop_target()
+        {
+            long target_guid = -1;
+            short target_animal_index = 0;
+            try
             {
                 client_proxy _target_client = null;
                 foreach (var _client in _impl.ClientProxys)
@@ -1182,189 +1562,165 @@ namespace game
 
                 target_guid = _target_client.PlayerGameInfo.guid;
                 target_animal_index = _target_client.PlayerGameInfo.current_animal_index;
+                target_animal_index = (short)(target_animal_index < 0 ? 0 : target_animal_index);
             }
-            target_animal_index = (short)(target_animal_index < 0 ? 0 : target_animal_index);
-
-            return Tuple.Create(target_guid, target_animal_index);
-        }
-
-        private Tuple<short, short> get_last_animal_and_pos()
-        {
-            short index = 0;
-            short min_pos = (short)_impl.PlayergroundLenght;
-            for (var i = 0; i < PlayerGameInfo.animal_info.Count; i++)
+            catch (System.Exception e)
             {
-                var animal = PlayerGameInfo.animal_info[i];
-                if (animal.current_pos < min_pos)
-                {
-                    index = (short)i;
-                    min_pos = animal.current_pos;
-                }
+                log.log.err(e.Message);
             }
-            return Tuple.Create(index, min_pos);
-        }
-
-        private Tuple<long, short> get_front_target(short pos)
-        {
-            long target_guid = -4;
-            short target_animal_index = 0;
-            foreach (var _client in _impl.ClientProxys)
-            {
-                if (_client != this)
-                {
-                    for (var i = 0; i < _client.PlayerGameInfo.animal_info.Count; i++)
-                    {
-                        var animal = _client.PlayerGameInfo.animal_info[i];
-                        if (animal.current_pos > pos)
-                        {
-                            target_guid = _client.PlayerGameInfo.guid;
-                            target_animal_index = (short)i;
-                            pos = animal.current_pos;
-                        }
-                    }
-                }
-            }
-
-            return Tuple.Create(target_guid, target_animal_index);
-        }
-
-        private async Task auto_use_skill()
-        {
-            if (PlayerGameInfo.skill_id == skill.soul_moving_method || PlayerGameInfo.skill_id == skill.swap_places)
-            {
-                var last_animal = get_last_animal_and_pos();
-                PlayerGameInfo.current_animal_index = last_animal.Item1;
-                _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).relay(PlayerGameInfo.guid, PlayerGameInfo.current_animal_index, true);
-                await Task.Delay(constant.wait_relay_animal);
-                var target = get_front_target(last_animal.Item2);
-                await use_skill(target.Item1, target.Item2);
-            }
-            else
-            {
-                var target = random_skill_target();
-                await use_skill(target.Item1, target.Item2);
-            }
-        }
-
-        private Tuple<long, short> random_prop_target()
-        {
-            client_proxy _target_client = null;
-            foreach (var _client in _impl.ClientProxys)
-            {
-                if (_client != this)
-                {
-                    _target_client = _client;
-                    break;
-                }
-            }
-
-            long target_guid = _target_client.PlayerGameInfo.guid;
-            short target_animal_index = _target_client.PlayerGameInfo.current_animal_index;
-            target_animal_index = (short)(target_animal_index < 0 ? 0 : target_animal_index);
 
             return Tuple.Create(target_guid, target_animal_index);
         }
 
         private async Task auto_use_props()
         {
-            var target = random_prop_target();
-            await use_props(props_list[0], target.Item1, target.Item2);
+            try
+            {
+                var target = random_prop_target();
+                await use_props(props_list[0], target.Item1, target.Item2);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public async Task auto_random_dice_animal()
         {
-            var active_animal = new List<short>();
-            foreach (var _animal_sate in active_State.animal_play_active_states)
+            try
             {
-                if (_animal_sate.could_throw_dice)
+                var active_animal = new List<short>();
+                foreach (var _animal_sate in active_State.animal_play_active_states)
                 {
-                    active_animal.Add(_animal_sate.animal_index);
+                    if (_animal_sate.could_throw_dice)
+                    {
+                        active_animal.Add(_animal_sate.animal_index);
+                    }
                 }
-            }
 
-            PlayerGameInfo.current_animal_index = active_animal[(int)hub.hub.randmon_uint((uint)active_animal.Count)];
-            _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).relay(PlayerGameInfo.guid, PlayerGameInfo.current_animal_index, true);
-            await Task.Delay(constant.wait_relay_animal);
+                PlayerGameInfo.current_animal_index = active_animal[(int)hub.hub.randmon_uint((uint)active_animal.Count)];
+                _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).relay(PlayerGameInfo.guid, PlayerGameInfo.current_animal_index, true);
+                await Task.Delay(constant.wait_relay_animal);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public async Task auto_random_prop_animal()
         {
-            var active_animal = new List<short>();
-            foreach (var _animal_sate in active_State.animal_play_active_states)
+            try
             {
-                if (_animal_sate.could_use_props)
+                var active_animal = new List<short>();
+                foreach (var _animal_sate in active_State.animal_play_active_states)
                 {
-                    active_animal.Add(_animal_sate.animal_index);
+                    if (_animal_sate.could_use_props)
+                    {
+                        active_animal.Add(_animal_sate.animal_index);
+                    }
                 }
-            }
 
-            PlayerGameInfo.current_animal_index = active_animal[(int)hub.hub.randmon_uint((uint)active_animal.Count)];
-            _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).relay(PlayerGameInfo.guid, PlayerGameInfo.current_animal_index, true);
-            await Task.Delay(constant.wait_relay_animal);
+                PlayerGameInfo.current_animal_index = active_animal[(int)hub.hub.randmon_uint((uint)active_animal.Count)];
+                _impl.GameClientCaller.get_multicast(_impl.ClientUUIDS).relay(PlayerGameInfo.guid, PlayerGameInfo.current_animal_index, true);
+                await Task.Delay(constant.wait_relay_animal);
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         public async Task auto_active()
         {
-            if (!CouldMove)
+            try
             {
-                return;
-            }
+                if (!CouldMove)
+                {
+                    return;
+                }
 
-            var active_list = new List<int>();
-            if (active_State.could_use_skill)
-            {
-                active_list.Add(0);
-            }
-            if (CouldProp)
-            {
-                active_list.Add(1);
-                active_list.Add(1);
-                active_list.Add(1);
-            }
-            if (CouldDice)
-            {
-                active_list.Add(2);
-                active_list.Add(2);
-                active_list.Add(2);
-            }
+                var active_list = new List<int>();
+                if (active_State.could_use_skill)
+                {
+                    active_list.Add(0);
+                }
+                if (CouldProp)
+                {
+                    active_list.Add(1);
+                    active_list.Add(1);
+                    active_list.Add(1);
+                }
+                if (CouldDice)
+                {
+                    active_list.Add(2);
+                    active_list.Add(2);
+                    active_list.Add(2);
+                }
 
-            var r = active_list[(int)hub.hub.randmon_uint((uint)active_list.Count)];
-            if (r == 0)
-            {
-                await auto_use_skill();
+                var r = active_list[(int)hub.hub.randmon_uint((uint)active_list.Count)];
+                if (r == 0)
+                {
+                    await auto_use_skill();
+                }
+                else if (r == 1)
+                {
+                    await auto_random_prop_animal();
+                    await auto_use_props();
+                }
+                else if (r == 2)
+                {
+                    await auto_random_dice_animal();
+                    await throw_dice();
+                }
             }
-            else if (r == 1)
+            catch (System.Exception e)
             {
-                await auto_random_prop_animal();
-                await auto_use_props();
-            }
-            else if (r == 2)
-            {
-                await auto_random_dice_animal();
-                await throw_dice();
+                log.log.err(e.Message);
             }
         }
 
         private void check_set_skill_active_state_unactive()
         {
-            log.log.trace("check_set_active_state_unactive begin");
+            try
+            {
+                log.log.trace("check_set_active_state_unactive begin");
 
-            active_State.could_use_skill = false;
+                active_State.could_use_skill = false;
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
+            }
         }
 
         private void check_set_props_active_state_unactive()
         {
-            foreach(var state in active_State.animal_play_active_states)
+            try
             {
-                state.could_use_props = false;
+                foreach (var state in active_State.animal_play_active_states)
+                {
+                    state.could_use_props = false;
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
         private void check_set_throw_dice_active_state_unactive()
         {
-            foreach (var state in active_State.animal_play_active_states)
+            try
             {
-                state.could_throw_dice = false;
+                foreach (var state in active_State.animal_play_active_states)
+                {
+                    state.could_throw_dice = false;
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
@@ -1372,77 +1728,98 @@ namespace game
         {
             log.log.trace("check_end_round begin");
 
-            active_State.round_active_num--;
-            if (active_State.round_active_num > 0)
+            try
             {
-                log.log.trace("check_end_round round_active_num > 0");
+                active_State.round_active_num--;
+                if (active_State.round_active_num > 0)
+                {
+                    log.log.trace("check_end_round round_active_num > 0");
 
-                if (check_could_use_skill() && PlayerGameInfo.skill_id != 0)
-                {
-                    active_State.could_use_skill = true;
-                }
-                if (props_list.Count > 0)
-                {
-                    foreach (var animal_state in active_State.animal_play_active_states)
+                    if (check_could_use_skill() && PlayerGameInfo.skill_id != 0)
                     {
-                        animal_state.could_use_props = true;
-                        animal_state.use_props_count = 1;
+                        active_State.could_use_skill = true;
+                    }
+                    if (props_list.Count > 0)
+                    {
+                        foreach (var animal_state in active_State.animal_play_active_states)
+                        {
+                            animal_state.could_use_props = true;
+                            animal_state.use_props_count = 1;
+                        }
+                    }
+
+                    for (var _animal_index = 0; _animal_index < PlayerGameInfo.animal_info.Count; _animal_index++)
+                    {
+                        var _animal = PlayerGameInfo.animal_info[_animal_index];
+                        if (_animal.current_pos < (_impl.PlayergroundLenght - 1) && _animal.could_move)
+                        {
+                            var animal_state = get_animal_play_active_state((short)_animal_index);
+                            animal_state.could_throw_dice = true;
+                            if (_animal.animal_id == animal.duck)
+                            {
+                                animal_state.throw_dice_count = 2;
+                            }
+                            else
+                            {
+                                animal_state.throw_dice_count = 1;
+                            }
+                        }
                     }
                 }
 
-                for (var _animal_index = 0; _animal_index < PlayerGameInfo.animal_info.Count; _animal_index++)
+                if (CouldMove)
                 {
-                    var _animal = PlayerGameInfo.animal_info[_animal_index];
-                    if (_animal.current_pos < (_impl.PlayergroundLenght - 1) && _animal.could_move)
-                    {
-                        var animal_state = get_animal_play_active_state((short)_animal_index);
-                        animal_state.could_throw_dice = true;
-                        if (_animal.animal_id == animal.duck)
-                        {
-                            animal_state.throw_dice_count = 2;
-                        }
-                        else
-                        {
-                            animal_state.throw_dice_count = 1;
-                        }
-                    }
+                    log.log.trace("check_end_round could move");
+                    return false;
                 }
-            }
 
-            if (CouldMove)
+                log.log.trace("check_end_round end!");
+                rounds++;
+            }
+            catch (System.Exception e)
             {
-                log.log.trace("check_end_round could move");
-                return false;
+                log.log.err(e.Message);
             }
-
-            log.log.trace("check_end_round end!");
-            rounds++;
 
             return true;
         }
 
         public void choose_animal(short animal_index)
         {
-            PlayerGameInfo.current_animal_index = animal_index;
-            foreach(var target_uuid in _impl.ClientUUIDS)
+            try
             {
-                var is_follow = target_uuid == uuid;
-                _impl.GameClientCaller.get_multicast(new List<string>{ target_uuid }).relay(PlayerGameInfo.guid, animal_index, is_follow);
+                PlayerGameInfo.current_animal_index = animal_index;
+                foreach (var target_uuid in _impl.ClientUUIDS)
+                {
+                    var is_follow = target_uuid == uuid;
+                    _impl.GameClientCaller.get_multicast(new List<string> { target_uuid }).relay(PlayerGameInfo.guid, animal_index, is_follow);
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
 
         public bool check_done_play()
         {
-            foreach (var animal_info in _game_info.animal_info)
+            try
             {
-                if (animal_info.current_pos >= (_impl.PlayergroundLenght - 1))
+                foreach (var animal_info in _game_info.animal_info)
                 {
-                    is_done_play = true;
-                    _impl.DonePlayClient = this;
-                    _impl.check_done_play();
+                    if (animal_info.current_pos >= (_impl.PlayergroundLenght - 1))
+                    {
+                        is_done_play = true;
+                        _impl.DonePlayClient = this;
+                        _impl.check_done_play();
 
-                    return true;
+                        return true;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
             return false;
         }
@@ -1454,10 +1831,17 @@ namespace game
 
         public void set_auto_active(bool is_auto)
         {
-            is_auto_active = is_auto;
-            if (is_auto_active)
+            try
             {
-                _impl.GameClientCaller.get_client(uuid).ntf_player_auto();
+                is_auto_active = is_auto;
+                if (is_auto_active)
+                {
+                    _impl.GameClientCaller.get_client(uuid).ntf_player_auto();
+                }
+            }
+            catch (System.Exception e)
+            {
+                log.log.err(e.Message);
             }
         }
     }
