@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Label, Sprite, Button, EditBox, director, assetManager, AssetManager, SceneAsset, view } from 'cc';
+import { _decorator, Component, Node, Label, ProgressBar, Button, EditBox, director, assetManager, AssetManager, SceneAsset } from 'cc';
 import 'minigame-api-typings';
 const { ccclass, property } = _decorator;
 
@@ -16,23 +16,9 @@ export class login extends Component {
     @property(Label)
     loadState:Label = null;
 
-    @property(Sprite)
-    progress0:Sprite = null;
-    @property(Sprite)
-    progress1:Sprite = null;
-    @property(Sprite)
-    progress2:Sprite = null;
-    @property(Sprite)
-    progress3:Sprite = null;
-
-    @property(Sprite)
-    time_progress0:Sprite = null;
-    @property(Sprite)
-    time_progress1:Sprite = null;
-    @property(Sprite)
-    time_progress2:Sprite = null;
-    @property(Sprite)
-    time_progress3:Sprite = null;
+    private progress = 0;
+    @property(ProgressBar)
+    progressBar:ProgressBar = null;
 
     async load_scene(bundle:AssetManager.Bundle, sceneName:string) {
         return new Promise<SceneAsset>((resolve, reject)=>{
@@ -42,51 +28,25 @@ export class login extends Component {
         });
     }
     
-    time_set_progress0() {
-        this.progress2.node.active = false;
-        this.time_progress0.node.active = true;
+    time_set_progress() {
+        this.progress += 0.1;
+        this.set_progress(this.progress);
 
         setTimeout(() => {
-            this.time_set_progress1();
-        }, 2000);
+            this.time_set_progress();
+        }, 1000);
     }
 
-    time_set_progress1() {
-        this.time_progress0.node.active = false;
-        this.time_progress1.node.active = true;
-
-        setTimeout(() => {
-            this.time_set_progress2();
-        }, 2000);
-    }
-
-    time_set_progress2() {
-        this.time_progress1.node.active = false;
-        this.time_progress2.node.active = true;
-
-        setTimeout(() => {
-            this.time_set_progress3();
-        }, 2000);
-    }
-
-    time_set_progress3() {
-        this.time_progress2.node.active = false;
-        this.time_progress3.node.active = true;
+    set_progress(progress:number) {
+        this.progressBar.progress = 1 - this.progress;
     }
 
     start() {
         this.account.node.active = false;
         this.loginBtn.node.active = false;
 
-        this.progress0.node.active = true;
-        this.progress1.node.active = false;
-        this.progress2.node.active = false;
-        this.progress3.node.active = false;
-
-        this.time_progress0.node.active = false;
-        this.time_progress1.node.active = false;
-        this.time_progress2.node.active = false;
-        this.time_progress3.node.active = false;
+        this.progress = 0;
+        this.progressBar.node.active = true;
 
         singleton.netSingleton.login.cb_player_login_non_account = () => {
             console.log("login non_account create role");
@@ -164,8 +124,8 @@ export class login extends Component {
     }
 
     get_user_info_login(code:string) {
-        this.progress0.node.active = false;
-        this.progress1.node.active = true;
+        this.progress += 0.1;
+        this.set_progress(this.progress);
         wx.getUserInfo({ 
             withCredentials:false,
             success: (result) => {
@@ -174,14 +134,15 @@ export class login extends Component {
 
                     this.loadState.string = "加载主界面中......"
                     singleton.netSingleton.mainScene = await this.load_scene(bundle, 'main');
-                    this.progress1.node.active = false;
-                    this.progress2.node.active = true;
+                    this.progress += 0.1;
+                    this.set_progress(this.progress);
                     this.loadState.string = "加载主界面成功......"
     
                     this.loadState.string = "加载游戏场景......"
-                    this.time_set_progress0();
+                    this.time_set_progress();
                     singleton.netSingleton.gameScene = await this.load_scene(bundle, 'lakeside_game');
-                    this.progress3.node.active = true;
+                    this.progress += 0.1;
+                    this.set_progress(this.progress);
                     this.loadState.string = "加载游戏场景成功......"
                     
                     singleton.netSingleton.login.nick_name = result.userInfo.nickName.slice(0, 3);
